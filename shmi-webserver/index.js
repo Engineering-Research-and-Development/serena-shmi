@@ -7,14 +7,24 @@ const morgan = require("morgan");
 const path = require("path");
 const errorhandler = require('errorhandler');
 
+var isProduction = process.env.NODE_ENV === 'production';
+
+const config = require("./config");
+require('./models/User');
+
 const app = express();
+app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
 app.use(cors());
+
+if (!isProduction) {
+  app.use(errorhandler());
+}
 
 /// catch 404 and forward to error handler
 app.use(require('./routes'));
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
 
@@ -24,15 +34,11 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-var isProduction = process.env.NODE_ENV === 'production';
 /// error handlers
 if (!isProduction) {
-  app.use(errorhandler());
   app.use(function(err, req, res, next) {
     console.log(err.stack);
-
     res.status(err.status || 500);
-
     res.json({'errors': {
       message: err.message,
       error: err

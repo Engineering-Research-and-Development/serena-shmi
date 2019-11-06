@@ -1,7 +1,10 @@
 const router = require('express').Router();
 
-router.use('/authenticate', require('./authenticate'));
-router.use('/rpcamanager', require('./rpcamanager'));
+var auth = require('../auth');
+
+router.use('/authenticate', require('./auth'));
+router.use('/rpca',  auth.required, require('./rpcamanager'));
+router.use('/metadata',  auth.required, require('./mdinterface'));
 
 router.use(function(err, req, res, next){
   if(err.name === 'ValidationError'){
