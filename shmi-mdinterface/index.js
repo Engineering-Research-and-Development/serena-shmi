@@ -55,7 +55,7 @@ app.use(function(err, req, res, next) {
   }});
 });
 
-const myPort = 9090;
+const myPort = 9091;
 app.listen(process.env.PORT || myPort, function () {
   console.log("SHMI Metadata Interface server is up and running and it's listening on port:" + myPort);
 });

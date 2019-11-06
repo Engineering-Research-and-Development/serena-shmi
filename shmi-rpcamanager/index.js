@@ -55,7 +55,7 @@ app.use(function(err, req, res, next) {
   }});
 });
 
-const myPort = 9091;
+const myPort = 9092;
 app.listen(process.env.PORT || myPort, function () {
   console.log("SHMI rpcamanager is up and running and it's listening on port:" + myPort);
 });
