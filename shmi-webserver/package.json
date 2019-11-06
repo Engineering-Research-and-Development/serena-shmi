@@ -4,7 +4,8 @@
   "description": "Serena Human Machine Interface Client",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon ./index.js"
   },
   "keywords": [
     "serena",
@@ -20,6 +21,10 @@
     "express": "^4.17.1",
     "http-proxy-middleware": "^0.20.0",
     "morgan": "^1.9.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pug": "^2.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
   }
 }

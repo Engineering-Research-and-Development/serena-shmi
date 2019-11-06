@@ -10,7 +10,7 @@
   <meta name="author" content="">
   <link href="../assets/img/head-logo-2.png" rel="icon" type="image/gif">
   <title>SerenaDashboard</title>
-
+  <!--  -->
   <!-- Custom fonts for this template-->
   <link href="../assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link
@@ -19,6 +19,7 @@
 
   <!-- Custom styles for this template-->
   <link href="../assets/css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -68,21 +69,29 @@
           <div class="bg-white py-2 collapse-inner rounded"
             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">
             <h8 class="collapse-header">header</h8>
-            <ul style="list-style-type: none; padding-left: 10px;">
-              <li><a class="collapse-item" href="#">object 1</a>
-                <ul style="list-style-type: none; padding-left: 10px;">
-                  <li><a class="collapse-item" href="#">object 1.1</a>
-                    <ul style="list-style-type: none; padding-left: 10px;">
-                      <li><a class="collapse-item" href="#">object 1.1.1</a>
-                      <li><a class="collapse-item" href="#">object 1.1.2</a>
+            <ul id="maintenance-treeview" class="treeview">
+              <li><i class="caret fa fa-caret-right"></i><a href="#">Beverages</a>
+                <ul class="nested">
+                  <li>Water</li>
+                  <li>Coffee</li>
+                  <li><i class="caret fa fa-caret-right">Tea</i>
+                    <ul class="nested">
+                      <li>Black Tea</li>
+                      <li>White Tea</li>
+                      <li><i class="caret fa fa-caret-right">Green Tea</i>
+                        <ul class="nested">
+                          <li>Sencha</li>
+                          <li>Gyokuro</li>
+                          <li>Matcha</li>
+                          <li>Pi Lo Chun</li>
+                        </ul>
+                      </li>
                     </ul>
                   </li>
-                  <li><a class="collapse-item" href="#">object 1.2</a></li>
                 </ul>
               </li>
             </ul>
           </div>
-
         </div>
       </li>
 
@@ -287,6 +296,7 @@
 
   <!-- Custom scripts for all pages-->
   <script src="../assets/js/sb-admin-2.min.js"></script>
+  <script src="../assets/js/controller.js"></script>
 
   <!-- Page level plugins -->
   <script src="../assets/vendor/chart.js/Chart.min.js"></script>
