@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-var auth = require('../auth');
+const auth = require('../auth');
 
 router.use('/authenticate', require('./auth'));
 router.use('/rpca',  auth.required, require('./rpcamanager'));

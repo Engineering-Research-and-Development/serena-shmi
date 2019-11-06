@@ -26,15 +26,7 @@
     "mongoose": "^5.7.8",
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.9.1",
-<<<<<<< HEAD
-    "path": "^0.12.7",
-    "pug": "^2.0.4"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.4"
-=======
     "passport": "^0.4.0",
     "path": "^0.12.7"
->>>>>>> 228fee434296e55288b6b977d00f4e333fbddf07
   }
 }

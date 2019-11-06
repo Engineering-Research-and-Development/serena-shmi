@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-router.use('/metadata', require('./mdservice'));
+router.use('/metadata', require('./metadata'));
 
 router.use(function(err, req, res, next){
   if(err.name === 'ValidationError'){
