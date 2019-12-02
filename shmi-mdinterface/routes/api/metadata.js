@@ -17,7 +17,9 @@ router.get('/enterprises', function(req, res, next){
 });
 
 router.get('/enterprise/:enterprise_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/enterprise/"+req.query.enterprise_id)
+  axios.get(config.nifiUrl+"/enterprise/"+req.params.enterprise_id, {
+      proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
@@ -27,7 +29,9 @@ router.get('/enterprise/:enterprise_id', function(req, res, next){
 });
 
 router.get('/sites', function(req, res, next){
-  axios.get(config.nifiUrl+"/sites")
+  axios.get(config.nifiUrl+"/sites", {
+      proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
@@ -37,7 +41,9 @@ router.get('/sites', function(req, res, next){
 });
 
 router.get('/site/:site_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/site/"+req.query.site_id)
+  axios.get(config.nifiUrl+"/site/"+req.params.site_id, {
+      proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
@@ -47,7 +53,9 @@ router.get('/site/:site_id', function(req, res, next){
 });
 
 router.get('/segments', function(req, res, next){
-  axios.get(config.nifiUrl+"/segments")
+  axios.get(config.nifiUrl+"/segments", {
+     proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
@@ -57,7 +65,9 @@ router.get('/segments', function(req, res, next){
 });
 
 router.get('/segment/:segment_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/segment/"+req.query.segment_id)
+  axios.get(config.nifiUrl+"/segment/"+req.params.segment_id, {
+      proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
@@ -67,7 +77,9 @@ router.get('/segment/:segment_id', function(req, res, next){
 });
 
 router.get('/assets', function(req, res, next){
-  axios.get(config.nifiUrl+"/assets")
+  axios.get(config.nifiUrl+"/assets", {
+      proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
@@ -77,7 +89,9 @@ router.get('/assets', function(req, res, next){
 });
 
 router.get('/asset/:asset_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/assets/"+req.query.asset_id)
+  axios.get(config.nifiUrl+"/assets/"+req.params.asset_id, {
+      proxy:false
+    })
     .then(response => {
       return res.json(response.data);
     })
