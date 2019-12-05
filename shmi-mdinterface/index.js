@@ -1,5 +1,4 @@
-//process.env.NODE_ENV = "development";
-process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "development";
 
 const express = require('express');
 const bodyParser = require('body-parser');
