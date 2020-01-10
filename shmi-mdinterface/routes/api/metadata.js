@@ -64,8 +64,14 @@ router.get('/segments', function(req, res, next){
     })
 });
 
-router.get('/segment/:segment_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/segment/"+req.params.segment_id, {
+router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', function(req, res, next){
+  var segment_prefix = req.params.segment_prefix;
+  var segment_suffix = req.params.segment_suffix;
+
+  var segment_id = segment_prefix +"/"+ segment_suffix;
+  console.log(segment_id);
+
+  axios.get(config.nifiUrl+"/segment/"+segment_id, {
       proxy:false
     })
     .then(response => {
@@ -88,8 +94,14 @@ router.get('/assets', function(req, res, next){
     })
 });
 
-router.get('/asset/:asset_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/asset/"+req.params.asset_id, {
+router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req, res, next){
+  var asset_prefix = req.params.asset_prefix;
+  var asset_suffix = req.params.asset_suffix;
+
+  var asset_id = asset_prefix +"/"+ asset_suffix;
+  console.log(asset_id);
+
+  axios.get(config.nifiUrl+"/asset/"+asset_id, {
       proxy:false
     })
     .then(response => {
