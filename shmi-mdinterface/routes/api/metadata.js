@@ -89,7 +89,7 @@ router.get('/assets', function(req, res, next){
 });
 
 router.get('/asset/:asset_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/assets/"+req.params.asset_id, {
+  axios.get(config.nifiUrl+"/asset/"+req.params.asset_id, {
       proxy:false
     })
     .then(response => {
