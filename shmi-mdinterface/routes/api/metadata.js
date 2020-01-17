@@ -17,7 +17,7 @@ router.get('/enterprises', function(req, res, next){
 });
 
 router.get('/enterprise/:enterprise_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/enterprise/"+req.params.enterprise_id, {
+  axios.get(config.nifiUrl+"/serena/1.0/enterprise/"+req.params.enterprise_id, {
       proxy:false
     })
     .then(response => {
@@ -29,7 +29,7 @@ router.get('/enterprise/:enterprise_id', function(req, res, next){
 });
 
 router.get('/sites', function(req, res, next){
-  axios.get(config.nifiUrl+"/sites", {
+  axios.get(config.nifiUrl+"/serena/1.0/sites", {
       proxy:false
     })
     .then(response => {
@@ -41,7 +41,7 @@ router.get('/sites', function(req, res, next){
 });
 
 router.get('/site/:site_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/site/"+req.params.site_id, {
+  axios.get(config.nifiUrl+"/serena/1.0/site/"+req.params.site_id, {
       proxy:false
     })
     .then(response => {
@@ -53,7 +53,7 @@ router.get('/site/:site_id', function(req, res, next){
 });
 
 router.get('/segments', function(req, res, next){
-  axios.get(config.nifiUrl+"/segments", {
+  axios.get(config.nifiUrl+"/serena/1.0/segments", {
      proxy:false
     })
     .then(response => {
@@ -71,7 +71,7 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
   var segment_id = segment_prefix +"/"+ segment_suffix;
   console.log(segment_id);
 
-  axios.get(config.nifiUrl+"/segment/"+segment_id, {
+  axios.get(config.nifiUrl+"/serena/1.0/segment/"+segment_id, {
       proxy:false
     })
     .then(response => {
@@ -83,7 +83,7 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
 });
 
 router.get('/assets', function(req, res, next){
-  axios.get(config.nifiUrl+"/assets", {
+  axios.get(config.nifiUrl+"/serena/1.0/assets", {
       proxy:false
     })
     .then(response => {
@@ -101,7 +101,7 @@ router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req
   var asset_id = asset_prefix +"/"+ asset_suffix;
   console.log(asset_id);
 
-  axios.get(config.nifiUrl+"/asset/"+asset_id, {
+  axios.get(config.nifiUrl+"/serena/1.0/asset/"+asset_id, {
       proxy:false
     })
     .then(response => {
