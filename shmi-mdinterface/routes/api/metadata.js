@@ -5,7 +5,7 @@ const cjson = require('circular-json');
 const config = require("../../config");
 
 router.get('/enterprises', function(req, res, next){
-  axios.get(config.nifiUrl+"/enterprises", {
+  axios.get(config.nifiUrl+"/serena/1.0/enterprises", {
       proxy:false
     })
     .then(response => {
