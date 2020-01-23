@@ -69,7 +69,6 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
   var segment_suffix = req.params.segment_suffix;
 
   var segment_id = segment_prefix +"/"+ segment_suffix;
-  console.log(segment_id);
 
   axios.get(config.nifiUrl+"/serena/1.0/segment/"+segment_id, {
       proxy:false
@@ -99,9 +98,25 @@ router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req
   var asset_suffix = req.params.asset_suffix;
 
   var asset_id = asset_prefix +"/"+ asset_suffix;
-  console.log(asset_id);
 
   axios.get(config.nifiUrl+"/serena/1.0/asset/"+asset_id, {
+      proxy:false
+    })
+    .then(response => {
+      return res.json(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+});
+
+router.get('/digest/:digest_prefix([0-9A-Z]+)/:digest_suffix([0-9]+)', function(req, res, next){
+  var digest_prefix = req.params.digest_prefix;
+  var digest_suffix = req.params.digest_suffix;
+
+  var digest_id = digest_prefix +"/"+ digest_suffix;
+
+  axios.get(config.nifiUrl+"/digest/"+digest_id, {
       proxy:false
     })
     .then(response => {
