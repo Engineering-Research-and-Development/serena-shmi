@@ -166,7 +166,8 @@ export default {
       }
     }
   },
-  mounted() {
+  Mounted() {
+    console.log(this.card_type);
     if (this.card_type == this.prediction_type) {
       this.RulStatus();
       this.interval = setInterval(() => {

@@ -24,13 +24,13 @@ const routes = [
   //TODO routing per pagine
   {
     path: '/',
-    redirect: '/services',
+    redirect: '/home',
     name: 'Home',
     component: DefaultContainer,
     children: [
       {
-        path: 'services',
-        name: 'Services',
+        path: 'home',
+        name: 'Home',
         component: Services,
       },
       {
