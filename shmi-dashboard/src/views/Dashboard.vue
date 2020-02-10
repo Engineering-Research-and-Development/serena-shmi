@@ -115,7 +115,6 @@
                   :card_image_alt="element.name"
                   :card_title="element.name"
                   card_body_text
-                  card_text_muted="RUL Status"
                   :card_button_link="element.url"
                   card_button_text="info"
                   @infoClicked="CardInfoClicked"
@@ -373,11 +372,45 @@ export default {
       //console.log("Clicked: " + card_id);
       this.fetchData(this.LocalNifiResourceAddressFromURL(card_id))
         .then((result) => {
-          alert("Fetched info:\n" + JSON.stringify(result));
+          //alert("Fetched info:\n" + JSON.stringify(result));
+          this.showMsgOk(result);
         })
         .catch((error) => {
           alert(error);
         });
+    },
+    //modal runtime creation example
+    showMsgOk(info) {
+      console.log(info);
+      const h = this.$createElement
+      // Using HTML string
+      const titleVNode = h('div', { domProps: { innerHTML: 'Title from <i>HTML<i> string' }, class: ['bg-dark,text-light'] })
+      // More complex structure
+      const messageVNode = h('div', { class: ['container', 'bg-dark'] }, [
+        h('p', { class: ['text-center', 'text-primary'] }, [
+          ' Paragraph text: ',
+          h('strong', {}, 'Strong text'),
+          ' and normal text ',
+        ]),
+        h('p', { class: ['text-center'] }, [h('b-spinner', { class: ['bg-primary'], style: [{ color: '#FFAABB' }] })]),
+        h('b-img', {
+          props: {
+            src: 'https://picsum.photos/id/20/250/250',
+            thumbnail: true,
+            center: true,
+            fluid: true, rounded: 'circle'
+          }
+        }),
+      ])
+      const footerVNode = h('footer', {}, [
+        'Footer text', h('p', {}, 'this is a footer, yeeeee')
+      ])
+      // We must pass the generated VNodes as arrays
+      this.$bvModal.msgBoxOk([messageVNode, footerVNode], {
+        title: [titleVNode],
+        buttonSize: 'lg',
+        centered: true, size: 'lg'
+      })
     },
     ShowTableData() {
       var tmp = [];
@@ -438,6 +471,20 @@ export default {
     GetRowInfo(value) {
       alert("Fetched info:\n" + JSON.stringify(value));
     },
+    /*SearchInList(filter, listId) {
+      var li = $(listId + " li");
+      for (i = 0; i < li.length; i++) {
+        var textValue = li[i]
+          .getElementsByTagName("span")[0]
+          .innerText.toUpperCase();
+        //console.log(textValue);
+        if (textValue.indexOf(filter.toUpperCase()) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    },*/
     scrollHandle(evt) {
       //console.log(evt)
       return evt;

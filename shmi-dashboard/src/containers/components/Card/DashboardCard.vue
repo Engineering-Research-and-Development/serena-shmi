@@ -30,19 +30,17 @@
     />
     <div class="card-body">
       <b-card-text>{{card_body_text}}</b-card-text>
-      <template
-        v-if="(this.card_type.localeCompare('enterprise') == 0 || this.card_type.localeCompare('site') == 0)? false:true"
-      >
+      <template v-if="(this.card_type.localeCompare('segment') != 0 )? false:true">
+        <div
+          class="circle_status mr-2"
+          style="display: inline-block;vertical-align:middle;"
+          :style="{ 'background': this.label_color}"
+        ></div>
         <span
-          :v-if="card_text_muted"
+          :v-if="this.prediction.id"
           class="text-muted"
           style="display:inline-block;vertical-align:middle; margin-right:10px;"
-        >{{card_text_muted}}</span>
-        <div
-          class="circle_status"
-          style="display: inline-block;vertical-align:middle;"
-          v-bind:style="{ background: status_color}"
-        ></div>
+        >RUL: {{this.prediction.rul}}</span>
       </template>
       <div class="float-right">
         <b-button
@@ -88,10 +86,6 @@ export default {
       type: String,
       default: ''
     },
-    card_text_muted: {
-      type: String,
-      default: ''
-    },
     card_button_text: {
       type: String,
       default: ''
@@ -99,21 +93,89 @@ export default {
     card_button_link: {
       type: String,
       default: ''
-    },
-    status: {
-      type: Number,
-      default: 0
     }
   },
   data() {
     return {
-      status_color: "lightgray"
+      colors: {
+        neutro: 'lightgray',
+        good: 'lightgreen',
+        warning: 'yellow',
+        alarm: 'red'
+      },
+      prediction: {
+        id: '',
+        ts: '',
+        label: -1,
+        rul: -1
+      },
+      interval: null,
+      prediction_type: "segment",
+      polling_interval: "10000",
+      label_color: 'blue',
     }
   },
   methods: {
+    fetchData: function (resource) {
+      this.loading = true;
+      let fetch_url = this.$config.localMetadataApiUrl + resource;
+      //console.log(fetch_url);
+      return new Promise((resolve, reject) => {
+        this.$http.get(fetch_url)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            //console.log(JSON.stringify(response.data));
+            //this.enterprises = response.data.enterprises;
+            resolve(response.data);
+          })
+          .catch(e => {
+            //console.log(JSON.stringify(e));
+            reject(this.makeToast('danger', 'Error', e.message));
+          });
+      });
+    },
     InfoBtnClicked() {
       this.$emit('infoClicked', this.card_id);
+    },
+    RulStatus() {
+      this.fetchData('/digest/' + this.SerenaResourceAddressFromURL(this.card_id)).then((result) => {
+        this.UpdateRul(result.prediction[0]);
+      });
+    },
+    UpdateRul(pred) {
+      //console.log(JSON.stringify(pred));
+      this.label_color = this.ColorLabel(pred.p_label);
+      this.prediction.id = pred['@id'];
+      this.prediction.ts = pred.TS;
+      this.prediction.label = pred.p_label;
+      this.prediction.rul = pred.RUL;
+      //console.log(JSON.stringify(this.prediction));
+    },
+    ColorLabel(label) {
+      switch (label) {
+        case 0:
+        case 4:
+          return this.colors.alarm;
+        case 1:
+        case 3:
+          return this.colors.warning;
+        case 2:
+          return this.colors.good;
+        default:
+          return this.colors.neutro;
+      }
     }
+  },
+  mounted() {
+    if (this.card_type == this.prediction_type) {
+      this.RulStatus();
+      this.interval = setInterval(() => {
+        this.RulStatus();
+      }, this.polling_interval);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   }
 }
 </script>
@@ -122,7 +184,6 @@ export default {
 <style scoped>
 .circle_status {
   padding: 10px 11px;
-  background: gray;
   height: 2px;
   border-radius: 50%;
   margin-left: auto;
