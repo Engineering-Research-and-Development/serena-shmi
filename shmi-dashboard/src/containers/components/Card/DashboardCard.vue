@@ -56,11 +56,11 @@
 
 <script>
 export default {
-  name: 'DashboardCard',
+  name: "DashboardCard",
   props: {
     card_id: {
       type: String,
-      default: ''
+      default: ""
     },
     card_element: {
       type: Object,
@@ -68,60 +68,62 @@ export default {
     },
     card_type: {
       type: String,
-      default: ''
+      default: ""
     },
     card_img_path: {
       type: String,
-      default: ''
+      default: ""
     },
     card_image_alt: {
       type: String,
-      default: ''
+      default: ""
     },
     card_title: {
       type: String,
-      default: ''
+      default: ""
     },
     card_body_text: {
       type: String,
-      default: ''
+      default: ""
     },
     card_button_text: {
       type: String,
-      default: ''
+      default: ""
     },
     card_button_link: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   data() {
     return {
       colors: {
-        neutro: 'lightgray',
-        good: 'lightgreen',
-        warning: 'yellow',
-        alarm: 'red'
+        neutro: "lightgray",
+        good: "lightgreen",
+        warning: "yellow",
+        alarm: "red"
       },
       prediction: {
-        id: '',
-        ts: '',
+        id: "",
+        ts: "",
         label: -1,
         rul: -1
       },
       interval: null,
       prediction_type: "segment",
-      polling_interval: "10000",
-      label_color: 'blue',
-    }
+      polling_interval: "5000",
+      label_color: "blue",
+      arrayPredictions: null
+    };
   },
   methods: {
-    fetchData: function (resource) {
+    fetchData: function(resource) {
       this.loading = true;
       let fetch_url = this.$config.localMetadataApiUrl + resource;
       //console.log(fetch_url);
       return new Promise((resolve, reject) => {
-        this.$http.get(fetch_url)
+        this.$http
+          .get(fetch_url)
           .then(response => {
             // JSON responses are automatically parsed.
             //console.log(JSON.stringify(response.data));
@@ -130,25 +132,33 @@ export default {
           })
           .catch(e => {
             //console.log(JSON.stringify(e));
-            reject(this.makeToast('danger', 'Error', e.message));
+            reject(this.makeToast("danger", "Error", e.message));
           });
       });
     },
     InfoBtnClicked() {
-      this.$emit('infoClicked', this.card_id);
+      var response = {
+        id: this.card_id,
+        title: this.card_title,
+        predictions: this.arrayPredictions
+      };
+      this.$emit("infoClicked", response);
     },
     RulStatus() {
-      this.fetchData('/digest/' + this.SerenaResourceAddressFromURL(this.card_id)).then((result) => {
+      this.fetchData(
+        "/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
+      ).then(result => {
         this.UpdateRul(result.prediction[0]);
       });
     },
     UpdateRul(pred) {
       //console.log(JSON.stringify(pred));
       this.label_color = this.ColorLabel(pred.p_label);
-      this.prediction.id = pred['@id'];
+      this.prediction.id = pred["@id"];
       this.prediction.ts = pred.TS;
       this.prediction.label = pred.p_label;
       this.prediction.rul = pred.RUL;
+      this.arrayPredictions.push(this.prediction);
       //console.log(JSON.stringify(this.prediction));
     },
     ColorLabel(label) {
@@ -166,19 +176,21 @@ export default {
       }
     }
   },
-  Mounted() {
-    console.log(this.card_type);
+  created() {
+    this.arrayPredictions = new Array();
     if (this.card_type == this.prediction_type) {
       this.RulStatus();
-      this.interval = setInterval(() => {
-        this.RulStatus();
-      }, this.polling_interval);
     }
+    this.interval = setInterval(() => {
+      if (this.card_type == this.prediction_type) {
+        this.RulStatus();
+      }
+    }, this.polling_interval);
   },
   beforeDestroy() {
     clearInterval(this.interval);
   }
-}
+};
 </script>
 
 
