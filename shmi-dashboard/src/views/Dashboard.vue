@@ -134,6 +134,7 @@
                   card_body_text
                   :card_button_link="element.url"
                   card_button_text="info"
+                  :card_visualization_link="element.visualization_link"
                   @infoClicked="CardInfoClicked"
                 ></DashboardCard>
               </template>
@@ -218,6 +219,12 @@ export default {
         site: "img/illustrations/svg/noun_site.svg",
         segment: "img/illustrations/svg/noun_segment_1.svg",
         asset: "img/illustrations/svg/noun_bicycle_chain.svg"
+      },
+      visualization_links: {
+        "Punching Tool":
+          "http://serena:9008/SynAreaDashboard/pages/use-case/kone/visualization/combi/index.html",
+        RobotBox:
+          "http://serena:9008/SynAreaDashboard/pages/use-case/comau/visualization/robotbox/index.html"
       },
       dashboard_table_type_fields: {
         Enterprise: [
@@ -357,8 +364,12 @@ export default {
               icon: "fa fa-gears",
               enterprise_index: site.enterprise_index,
               site_index: index,
+              visualization_link: this.visualization_links[segment.name]
+                ? this.visualization_links[segment.name]
+                : "",
               children: []
             };
+            console.log(obj);
             site.children.push(obj);
           }
         });
@@ -422,7 +433,8 @@ export default {
           id: element.id,
           name: element.name,
           url: element.url,
-          type: element.type
+          type: element.type,
+          visualization_link: element.visualization_link
         });
       });
       this.dashboard_card_elements = tmp;

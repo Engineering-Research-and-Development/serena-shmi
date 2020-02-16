@@ -1,5 +1,5 @@
 <template>
-  <!--  <b-card class="shadow h-100 w-100">
+  <!--<b-card class="shadow h-100 w-100">
       <img
         :v-if="card_img_path"
         class="card-img-top img-fluid"
@@ -21,14 +21,14 @@
         </div>
       </div>
   </b-card>-->
-  <b-card class="shadow h-100" sm="12" md="6" lg="4" xl="3" :title="card_title">
+  <b-card class="shadow h-100" sm="6" md="3" xl="2" :title="card_title">
     <img
       :v-if="card_img_path"
       class="card-img-top img-fluid w-100 px-1"
       :src="card_img_path"
       :alt="card_image_alt"
     />
-    <div class="card-body">
+    <div class="card-body p-0">
       <b-card-text>{{card_body_text}}</b-card-text>
       <template v-if="(this.card_type.localeCompare('segment') != 0 )? false:true">
         <div
@@ -50,6 +50,16 @@
           v-on:click="InfoBtnClicked"
         >{{card_button_text}}</b-button>
       </div>
+      <template v-if="this.card_visualization_link? true:false">
+        <div class="my-2">
+          <span class="d-block">
+            <a class="font-weight-bold" :href="card_visualization_link" target="_blank">
+              <i class="fa fa-cube fa-fw"></i>
+              3D visualization
+            </a>
+          </span>
+        </div>
+      </template>
     </div>
   </b-card>
 </template>
@@ -91,6 +101,10 @@ export default {
       default: ""
     },
     card_button_link: {
+      type: String,
+      default: ""
+    },
+    card_visualization_link: {
       type: String,
       default: ""
     }

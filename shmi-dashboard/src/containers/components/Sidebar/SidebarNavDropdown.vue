@@ -18,32 +18,28 @@ export default {
   props: {
     dropDownItem: {
       type: Object,
-      default: () => {
-      }
+      default: () => {}
     }
   },
   computed: {
     classIcon() {
-      return [
-        'nav-icon',
-        this.dropDownItem.icon
-      ]
+      return ["nav-icon", this.dropDownItem.icon];
     }
   },
   methods: {
     handleClick(e) {
       e.preventDefault();
       //console.log(e.target);
-      this.$emit('dropDownClicked', this.dropDownItem);
-      e.target.parentElement.classList.toggle('open');
+      this.$emit("dropDownClicked", this.dropDownItem);
+      e.target.parentElement.classList.toggle("open");
     },
     spanClick(e) {
       e.preventDefault();
       //console.log(e.target);
-      this.$emit('itemClicked', this.dropDownItem);
+      this.$emit("itemClicked", this.dropDownItem);
     }
   }
-}
+};
 </script>
 
 <style scoped lang="css">
