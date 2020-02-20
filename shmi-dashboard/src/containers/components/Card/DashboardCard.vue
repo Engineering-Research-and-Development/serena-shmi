@@ -40,7 +40,7 @@
           :v-if="this.prediction.id"
           class="text-muted"
           style="display:inline-block;vertical-align:middle; margin-right:10px;"
-        >RUL: {{this.prediction.rul}}</span>
+        >RUL: {{this.prediction.rul}} days</span>
       </template>
       <div class="float-right">
         <b-button
@@ -125,7 +125,7 @@ export default {
       },
       interval: null,
       prediction_type: "segment",
-      polling_interval: "5000",
+      polling_interval: "50000",
       label_color: "blue",
       arrayPredictions: null
     };
@@ -133,14 +133,16 @@ export default {
   methods: {
     fetchData: function(resource) {
       this.loading = true;
-      let fetch_url = this.$config.localMetadataApiUrl + resource;
-      //console.log(fetch_url);
+      //let fetch_url = this.$config.localMetadataApiUrl + resource;
+      let fetch_url =
+        this.$config.serenaDigestPredictionUrl + "?id=" + resource;
+      console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
           .get(fetch_url)
           .then(response => {
             // JSON responses are automatically parsed.
-            //console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
             //this.enterprises = response.data.enterprises;
             resolve(response.data);
           })
@@ -160,7 +162,10 @@ export default {
     },
     RulStatus() {
       this.fetchData(
-        "/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
+        //with localMetadataApiUrl
+        //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
+        //with serenaDigestPredictionUrl
+        this.SerenaResourceAddressFromURL(this.card_id)
       ).then(result => {
         this.UpdateRul(result.prediction[0]);
       });

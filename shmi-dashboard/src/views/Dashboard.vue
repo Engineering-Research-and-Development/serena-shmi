@@ -369,7 +369,7 @@ export default {
                 : "",
               children: []
             };
-            console.log(obj);
+            //console.log(obj);
             site.children.push(obj);
           }
         });
@@ -377,6 +377,7 @@ export default {
       });
     },
     GetAssets(segment, index) {
+      //alert(segment.url);
       this.fetchData(segment.url).then(result => {
         result.assets.forEach(asset => {
           if (this.ChildExists(segment.children, asset["@id"]) == -1) {
