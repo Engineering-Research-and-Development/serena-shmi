@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-router.use('/rpca', require('./rpca'));
+router.use('/1.0', require('./rpca'));
 
 router.use(function(err, req, res, next){
   if(err.name === 'ValidationError'){

@@ -4,7 +4,7 @@ var proxy = require("http-proxy-middleware");
 
 router.use(
     proxy({
-        target: "http://localhost:9091", //"http://shmi_mdinterface:4444"
+        target: "http://localhost:4444", //"http://shmi_mdinterface:4444"
         changeOrigin: true, // proxy websockets
         ws: true,
         pathRewrite: function(path, req) {
