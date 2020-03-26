@@ -1,11 +1,10 @@
-process.env.NODE_ENV = "development";
+process.env.NODE_ENV = "production";
 
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const path = require("path");
 const errorhandler = require("errorhandler");
-const pug = require("pug");
 const bodyParser = require("body-parser");
 
 var isProduction = process.env.NODE_ENV === "production";
@@ -18,7 +17,6 @@ const app = express();
 app.use(cors());
 
 app.set("views", path.join(__dirname + "/public/app/views/"));
-app.set("view engine", "pug");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require("method-override")());
@@ -31,11 +29,6 @@ if (!isProduction) {
 
 /// catch 404 and forward to error handler
 app.use(require("./routes"));
-
-app.get("*", (req, res) => {
-  //res.sendFile(path.join(__dirname + "/public/app/views/index.html"));
-  res.render("homepage");
-});
 
 app.use(function(req, res, next) {
   var err = new Error("Not Found");
@@ -74,6 +67,6 @@ app.use(function(err, req, res, next) {
 const myPort = 9090;
 app.listen(process.env.PORT || myPort, function() {
   console.log(
-    "SHMI front-end is up and running and it's listening on port:" + myPort
+    "SHMI back-end is up and running and it's listening on port:" + myPort
   );
 });
