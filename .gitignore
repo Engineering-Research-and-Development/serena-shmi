@@ -1,0 +1,6 @@
+node_modules
+shmi-dashboard/node_modules
+shmi-webserver/node_modules
+shmi-mdinterface/node_modules
+shmi-mdmanager/node_modules
+shmi-rpcamanager/node_modules
