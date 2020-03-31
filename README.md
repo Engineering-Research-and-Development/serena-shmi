@@ -2,25 +2,35 @@
 
 ### Getting Started
 
-Clone repo
+1) Clone repo
 
+```
   git clone https://github.com/Engineering-Research-and-Development/serena-shmi
+```
 
-Explore path
+2) Explore path
 
+```
   $> cd serena-shmi
+```
 
-Install serena-shmi modules
+3) Install serena-shmi modules
 
+```
   npm install
+```
 
-Install modules of shmi-mdinterface,shmi-mdmanager,shmi-webserver,shmi-dashboard
+4) Install modules of shmi-mdinterface,shmi-mdmanager,shmi-webserver,shmi-dashboard
 
+```
   npm run install
+```
 
-Run all services
+5) Run all services
 
+```
   npm run start
+```
 
 ## Authors
 
