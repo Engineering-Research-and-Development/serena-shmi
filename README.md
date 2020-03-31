@@ -1,9 +1,7 @@
 # serena-shmi
+First enter in "serena-shmi" path
 
-
-$cd serena-shmi
-
-
+    $> cd serena-shmi
 1) install modules of serena-shmi
     
     npm install
