@@ -142,13 +142,16 @@ export default {
           .get(fetch_url)
           .then(response => {
             // JSON responses are automatically parsed.
-            console.log(JSON.stringify(response.data));
+            //console.log(JSON.stringify(response.data));
             //this.enterprises = response.data.enterprises;
             resolve(response.data);
           })
           .catch(e => {
-            //console.log(JSON.stringify(e));
-            reject(this.makeToast("danger", "Error", e.message));
+            console.log(e);
+            if(e.status == 404)
+              resolve(console.log('404'));
+            else
+              reject(console.log(e.xhr));
           });
       });
     },

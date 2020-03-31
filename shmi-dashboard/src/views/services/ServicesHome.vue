@@ -24,8 +24,8 @@
           card_title="Metadata service"
           card_body_text="Link to Dell Metadata Manager component"
           card_button_text="Metadata Manager"
-          card_button_link="/metadata_manager"
-        ></ServiceCard>
+          card_button_link="http://localhost:4445/"
+        ></ServiceCard><!-- Indirizzo mdmanager -->
         <ServiceCard
           card_img_path="img/illustrations/svg/undraw_safe_bnk7.svg"
           card_image_alt="Card image cap"

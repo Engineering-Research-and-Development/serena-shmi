@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     login: function () {
-      this.login_error = '';
+      /*this.login_error = '';
       this.loading = true;
       let login_url = process.env.VUE_APP_JSON_PLACEHOLDER_URL + 'posts';
       //console.log(login_url + ' - ' + JSON.stringify(params));
@@ -108,13 +108,13 @@ export default {
           //this.posts = response.data
           //console.log(JSON.stringify(response.data));
           this.userId = response.data.id;
-          this.loading = false;
-          this.$router.push({ name: 'Services', params: { userId: this.userId } });
-        })
+          this.loading = false;*/
+          this.$router.push({ name: 'Home', params: { userId: this.userId } });
+        /*})
         .catch(e => {
           this.loading = false;
           this.login_error = e;
-        });
+        });*/
     },
     postLogin(params) {
       this.login_error = '';
@@ -128,7 +128,7 @@ export default {
           //console.log(JSON.stringify(response.data));
           this.userId = response.data.id;
           this.loading = false;
-          this.$router.push({ name: 'Services', params: { userId: this.userId } });
+          this.$router.push({ name: 'Home', params: { userId: this.userId } });
         })
         .catch(e => {
           this.loading = false;

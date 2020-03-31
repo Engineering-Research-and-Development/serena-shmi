@@ -1,4 +1,134 @@
-<html>
-<head></head>
-<body>Something went wrong</body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="/assets/images/head-logo-2.png" rel="icon" type="image/gif">
+    <title>Metadata</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="/assets/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/assets/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css" />
+    <!-- Web page custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
+</head>
+
+<body>
+    <!-- Content Wrapper -->
+    <!-- Begin Page Content -->
+    <div id="content" class="container">
+        <div class="card shadow my-2">
+            <!-- Card Header - Dropdown -->
+            <h5 class="card-header">Metadata</h5>
+            <div class="card-body">
+                <h5 class="card-title">Metadata Form</h5>
+                <div>
+                    <div class="form-group">
+                        <label for="typesSelect">Types</label>
+                        <select class="form-control" id="typesSelect"> </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editList">Editables items</label>
+                        <ul id="editList" class="list-group border"></ul>
+                        <div id="editListLoading" class="lds-ellipsis">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="row" style="margin-top:25px">
+                            <div class="col">
+                                <div class="form-check-inline">
+                                    <input id="searchTypesInput" class="form-control mr-sm-2" type="search"
+                                        placeholder="Search" aria-label="Search">
+                                    <button id="searchTypesButton" class="btn btn-outline my-2 my-sm-0" type="submit"><i
+                                            class="fas fa-fw fa-search"></i></button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button id="addButton" class="btn btn-primary float-right">
+                                    Add new
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <!-- <footer class="sticky-footer bg-white p-1">
+        <div class="copyright text-center my-2">
+            <span>Copyright &copy; SERENA Project</span>
+            <span>Provided by <img src="assets/images/progressLogo.Light.png" style="height: 30px" /></span>
+        </div>
+    </footer> -->
+    <!-- End of Footer -->
+
+    <!-- hidden form -->
+    <div id="myOverlay" class="overlay">
+        <div id="editForm" class="card shadow mb-4 editForm">
+            <h5 id="myOverlay-title" class="card-header">Edit form</h5>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="nameField">Name</label>
+                    <input id="nameField" type="text" class="form-control" name="Name" />
+                </div>
+                <div class="form-group">
+                    <label for="tagField">User Tag Indent</label>
+                    <input id="tagField" type="text" class="form-control" name="Tag" />
+                </div>
+                <!--<b> Age:</b>
+            <br />
+            <input type="radio" name="age" value="adolescent" /> 0 - 19 years
+            <br />
+            <input type="radio" name="age" value="mid" /> 20 - 59 years
+            <br />
+            <input type="radio" name="age" value="senior" /> 60 + years
+            <br />
+            <br />-->
+                <div id="myOverlay-description-group" class="form-group">
+                    <label for="decription">Description</label>
+                    <textarea id="description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group" style="text-align: center">
+                    <button id="updateButton" class="btn btn-success my-2 my-sm-0">
+                        Update
+                    </button>
+                    <button id="createButton" class="btn btn-success my-2 my-sm-0">
+                        Create
+                    </button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" id="submit" onclick="CloseOverlayForm()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="snackbar">Some text some message..</div>
+
+        <!-- jQuery first, then Bootstrap JS -->
+        <script src="/assets/js/jquery.js"></script>
+        <script src="/assets/js/bootstrap.js"></script>
+        <!-- Custom scripts for all pages -->
+        <script src="/assets/js/sb-admin-2.min.js"></script>
+
+        <script src="/assets/js/controller.js"></script>
+</body>
+
 </html>

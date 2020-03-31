@@ -27,6 +27,15 @@ if (!isProduction) {
 /// catch 404 and forward to error handler
 app.use(require('./routes'));
 
+app.use("/scripts", express.static(__dirname + "/node_modules/"));
+app.use("/assets", express.static(__dirname + "/public/app/assets/"));
+
+///Redirect to Homepage
+app.get("/", function(req, res) {
+  res.sendFile(__dirname + "/public/app/views/index.html");
+});
+
+
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
