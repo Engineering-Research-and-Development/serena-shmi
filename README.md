@@ -1,8 +1,8 @@
 # serena-shmi
 In "serena-shmi" path:
   1) install modules of serena-shmi
-    npm install
+    "npm install"
   2) install modules of shmi-mdinterface,shmi-mdmanager,shmi-webserver,shmi-dashboard
-    npm run install
+    "npm run install"
   3) run all services
-    npm run start
+    "npm run start"
