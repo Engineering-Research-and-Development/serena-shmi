@@ -3,11 +3,19 @@
     <!--<DefaultSidebar :nav_data="nav" :dropdown_data="sidebarnav_dropdown_data" />-->
     <Sidebar>
       <nav class="sidebar-nav">
-        <VuePerfectScrollbar class="scroll-area" :settings="psSettings" @ps-scroll-y="scrollHandle">
+        <VuePerfectScrollbar
+          class="scroll-area"
+          :settings="psSettings"
+          @ps-scroll-y="scrollHandle"
+        >
           <ul class="nav">
             <SidebarNavItem>
               <SidebarNavLink
-                :navLinkItem="{name: 'Dashboard',url:'/dashboard',icon: 'cui-speedometer'}"
+                :navLinkItem="{
+                  name: 'Dashboard',
+                  url: '/dashboard',
+                  icon: 'cui-speedometer'
+                }"
                 @click="alert('cucu')"
               />
             </SidebarNavItem>
@@ -20,7 +28,11 @@
               />
             </SidebarNavItem>-->
             <SidebarNavDivider classes="null" />
-            <SidebarNavTitle name="enterprises" :classes="null" :wrapper="null" />
+            <SidebarNavTitle
+              name="enterprises"
+              :classes="null"
+              :wrapper="null"
+            />
             <!--
             <SidebarNavLabel
               :name="''"
@@ -29,7 +41,10 @@
               :label="''"
               :classes="''"
             />-->
-            <template v-for="(nav_dropdown_item,nav_dropdown_item_index) in nav_dropdown_items">
+            <template
+              v-for="(nav_dropdown_item,
+              nav_dropdown_item_index) in nav_dropdown_items"
+            >
               <SidebarNavDropdown
                 :key="nav_dropdown_item_index"
                 :dropDownItem="nav_dropdown_item"
@@ -52,7 +67,10 @@
                             @dropDownClicked="GetChildren"
                             @itemClicked="ShowChildren"
                           >
-                            <template v-for="(child_2, child_2_index) in child.children">
+                            <!-- 3rd level depth DropDown -->
+                            <!--<template
+                              v-for="(child_2, child_2_index) in child.children"
+                            >
                               <template>
                                 <SidebarNavDropdown
                                   :key="child_2_index"
@@ -63,7 +81,8 @@
                                   <li
                                     :key="child_3_index"
                                     class="nav-item"
-                                    v-for="(child_3, child_3_index) in child_2.children"
+                                    v-for="(child_3,
+                                    child_3_index) in child_2.children"
                                   >
                                     <SidebarNavLink
                                       :navLinkItem="child_3"
@@ -74,7 +93,25 @@
                                   </li>
                                 </SidebarNavDropdown>
                               </template>
-                            </template>
+                            </template>-->
+                            <!-- 3rd Level depth Dropdown -->
+                            <!-- OR -->
+                            <!-- 3rd Level depth NavLink -->
+                            <li
+                              :key="child_2_index"
+                              class="nav-item"
+                              v-for="(child_2, child_2_index) in child.children"
+                            >
+                              <SidebarNavItem>
+                                <SidebarNavLink
+                                  :navLinkItem="child_2"
+                                  :badge="child_2.badge"
+                                  :variant="child_2.variant"
+                                  :attributes="{disabled:true}"
+                                />
+                              </SidebarNavItem>
+                            </li>
+                            <!-- 3rd Level depth NavLink -->
                           </SidebarNavDropdown>
                         </template>
                       </template>
@@ -94,7 +131,11 @@
         v-if="dashboard_card_elements.length === 0"
         style=" position:absolute; left: 50%; top:50%; text-align:center"
       >
-        <b-spinner style="width: 10rem; height: 10rem;" type="grow" label="Scanning"></b-spinner>
+        <b-spinner
+          style="width: 10rem; height: 10rem;"
+          type="grow"
+          label="Scanning"
+        ></b-spinner>
         <p>
           <strong>loading...</strong>
         </p>
@@ -120,10 +161,15 @@
                   :labels="chartLabels"
                 />
               </template>
-              <b-button class="mt-4 float-right" variant="outline-primary" @click="clearChart">Close</b-button>
+              <b-button
+                class="mt-4 float-right"
+                variant="outline-primary"
+                @click="clearChart"
+                >Close</b-button
+              >
             </b-card>
             <b-card-group card-deck deck>
-              <template v-for="(element,i) in dashboard_card_elements">
+              <template v-for="(element, i) in dashboard_card_elements">
                 <DashboardCard
                   :key="i"
                   :card_id="element.id"
@@ -136,6 +182,7 @@
                   card_button_text="info"
                   :card_visualization_link="element.visualization_link"
                   @infoClicked="CardInfoClicked"
+                  @cardClicked="CardClicked"
                 ></DashboardCard>
               </template>
             </b-card-group>
@@ -173,7 +220,7 @@ import SidebarNavDivider from "@/containers/components/Sidebar/SidebarNavDivider
 import SidebarNavLink from "@/containers/components/Sidebar/SidebarNavLink";
 import SidebarNavItem from "@/containers/components/Sidebar/SidebarNavItem";
 import SidebarNavTitle from "@/containers/components/Sidebar/SidebarNavTitle";
-//import SidebarNavLabel from '@/containers/components/Sidebar/SidebarNavLabel'
+//import SidebarNavLabel from "@/containers/components/Sidebar/SidebarNavLabel";
 //import SidebarNavDropDownGroup from '@/containers/components/Sidebar/SidebarNavDropDownGroup'
 import SidebarNavDropdown from "@/containers/components/Sidebar/SidebarNavDropdown";
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
@@ -218,7 +265,8 @@ export default {
         enterprise: "img/illustrations/svg/noun_companies.svg",
         site: "img/illustrations/svg/noun_site.svg",
         segment: "img/illustrations/svg/noun_segment_1.svg",
-        asset: "img/illustrations/svg/noun_bicycle_chain.svg"
+        asset: "img/illustrations/svg/noun_bicycle_chain.svg",
+        meas_location: "img/illustrations/svg/noun_meas_locations.svg"
       },
       visualization_links: {
         "Punching Tool":
@@ -398,7 +446,37 @@ export default {
         this.ShowDashboardCards(segment.children);
       });
     },
+    GetMeasLocations(asset, index) {
+      //Load meas locations
+      console.log(index + " --- " + JSON.stringify(asset));
+      //alert(segment.url);
+      this.fetchData(asset.url).then(result => {
+        console.log(JSON.stringify(result));
+        result.meas_locations.forEach(meas => {
+          if (this.ChildExists(asset.children, meas["@id"]) == -1) {
+            var obj = {
+              id: meas["@id"],
+              name: meas.name,
+              url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
+              type: "meas_location",
+              icon: "cui-chart",
+              enterprise_index: asset.enterprise_index,
+              site_index: asset.site_index,
+              segment_index: asset.segment_index,
+              asset_index: index
+            };
+            asset.children.push(obj);
+          }
+        });
+        this.ShowDashboardCards(asset.children);
+      });
+    },
+    GetAsHypEvents(asset, asset_index) {
+      //Load events
+      console.log(asset_index + " --- " + JSON.stringify(asset));
+    },
     GetChildren(value) {
+      console.log(JSON.stringify(value));
       switch (value.type) {
         case "enterprise":
           var ent_index = this.nav_dropdown_items.indexOf(value);
@@ -424,6 +502,16 @@ export default {
           break;
         //TODO
         case "asset":
+          var asset_index = this.nav_dropdown_items[
+            value.enterprise_index
+          ].children[value.site_index].children[
+            value.segment_index
+          ].children.indexOf(value);
+          var asset = this.nav_dropdown_items[value.enterprise_index].children[
+            value.site_index
+          ].children[value.segment_index].children[asset_index];
+          this.GetMeasLocations(asset, asset_index);
+          this.GetAsHypEvents(asset, asset_index);
           break;
       }
     },
@@ -452,6 +540,11 @@ export default {
       } else {
         this.ShowDashboardCards(value.children);
       }
+    },
+    CardClicked(response) {
+      console.log(JSON.stringify(response));
+      //TODO
+      //showChildren
     },
     CardInfoClicked(response) {
       //console.log(JSON.stringify(response));
@@ -524,16 +617,22 @@ export default {
     },
     ShowTableData() {
       var tmp = [];
-      this.dashboard_card_elements.forEach(element => {
-        this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
-          .then(result => {
-            tmp.push(this.DashboardTableElement(result));
-            this.SelectTableFields(result["@type"]);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      });
+      if (this.dashboard_card_elements[0].type == "asset") {
+        return;
+      } else if (this.dashboard_card_elements[0].type == "meas_location") {
+        return;
+      } else {
+        this.dashboard_card_elements.forEach(element => {
+          this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
+            .then(result => {
+              tmp.push(this.DashboardTableElement(result));
+              this.SelectTableFields(result["@type"]);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        });
+      }
       this.dashboard_table_elements = tmp;
     },
     SelectTableFields(type) {

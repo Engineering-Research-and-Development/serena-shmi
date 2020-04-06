@@ -27,10 +27,11 @@
       class="card-img-top img-fluid w-100 px-1"
       :src="card_img_path"
       :alt="card_image_alt"
+      v-on:click="ImageClicked"
     />
     <div class="card-body p-0">
       <b-card-text>{{card_body_text}}</b-card-text>
-      <template v-if="(this.card_type.localeCompare('segment') != 0 )? false:true">
+      <template v-if="(this.card_type.localeCompare(this.prediction_type) != 0 )? false:true">
         <div
           class="circle_status mr-2"
           style="display: inline-block;vertical-align:middle;"
@@ -154,6 +155,13 @@ export default {
               reject(console.log(e.xhr));
           });
       });
+    },
+    ImageClicked(){
+      var response = {
+        id: this.card_id,
+        type: this.card_type
+      };
+      this.$emit("cardClicked", response);
     },
     InfoBtnClicked() {
       var response = {
