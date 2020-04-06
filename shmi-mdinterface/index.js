@@ -1,5 +1,3 @@
-process.env.NODE_ENV = "production";
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -7,18 +5,18 @@ const morgan = require("morgan");
 const path = require("path");
 const errorhandler = require('errorhandler');
 
+require('dotenv').config();
 const config = require("./config");
 
-var isProduction = process.env.NODE_ENV === 'production';
+var isProduction = config.stage;
 
 const app = express();
 app.use(morgan('combined'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
-app.use(cors());
-
 app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
+app.use(cors());
 
 if (!isProduction) {
   app.use(errorhandler());
@@ -55,8 +53,7 @@ app.use(function(err, req, res, next) {
   }});
 });
 
-const myPort = 4444;
-app.listen(process.env.PORT || myPort, function () {
-  console.log("SHMI Metadata Interface server is up and running and it's listening on port:" + myPort);
+app.listen(config.port, function () {
+  console.log("SHMI Metadata Interface server is up and running and it's listening on port:" + config.port);
 });
 

@@ -1,7 +1,7 @@
 /* Global variables */
-var url = "http://serena:9093/serena/1.0/";
-//TODO url mdinterface
-//var url = "http://localhost:9090/api/metadata/api/1.0/";
+var url = "http://localhost:9090/api/metadata/api/1.0/";
+//var url = "http://serena:9093/serena/1.0/";
+
 var selectedTypeId = "";
 var selectedItemType = "";
 var context = "";

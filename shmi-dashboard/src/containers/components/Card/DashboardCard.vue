@@ -135,7 +135,7 @@ export default {
       this.loading = true;
       //let fetch_url = this.$config.localMetadataApiUrl + resource;
       let fetch_url =
-        this.$config.serenaDigestPredictionUrl + "?id=" + resource;
+        this.$config.serenaDigestPredictionUrl + "/" + resource;
       console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http

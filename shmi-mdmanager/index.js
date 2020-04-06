@@ -1,40 +1,32 @@
-process.env.NODE_ENV = "development";
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const morgan = require("morgan");
 const path = require("path");
 const errorhandler = require('errorhandler');
 
+require('dotenv').config();
 const config = require("./config");
 
-var isProduction = process.env.NODE_ENV === 'production';
+var isProduction = config.stage;
 
 const app = express();
-app.use(morgan('combined'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
-app.use(cors());
-
 app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
+app.use(cors());
 
 if (!isProduction) {
   app.use(errorhandler());
 }
 
 /// catch 404 and forward to error handler
-app.use(require('./routes'));
 
 app.use("/scripts", express.static(__dirname + "/node_modules/"));
 app.use("/assets", express.static(__dirname + "/public/app/assets/"));
-
-///Redirect to Homepage
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/public/app/views/index.html");
 });
-
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -64,8 +56,8 @@ app.use(function(err, req, res, next) {
   }});
 });
 
-const myPort = 4445;
-app.listen(process.env.PORT || myPort, function () {
-  console.log("SHMI Metadata Manager is up and running and it's listening on port:" + myPort);
+app.listen(config.port, function() {
+  console.log(
+    "SHMI Metadata Manager is up and running and it's listening on port:" + config.port
+  );
 });
-

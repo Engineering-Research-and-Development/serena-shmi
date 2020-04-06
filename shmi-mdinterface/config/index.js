@@ -1,4 +1,5 @@
 module.exports = {
-  nifiUrl: process.env.NODE_ENV === 'production' ? "http://serena:9093" : "http://localhost:9081",
-  myenvvar: process.env.NODE_ENV === 'production' ? process.env.MYENV : 'myenv'
+  stage: process.env.NODE_ENV,
+  port: process.env.NODE_ENV === 'production' ? process.env.PORT :  4444,
+  nifiUrl: process.env.NODE_ENV === 'production' ? process.env.NIFI_URL : "http://localhost:9081"
 };

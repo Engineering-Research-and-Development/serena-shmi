@@ -285,7 +285,7 @@ export default {
     },
     fetchData: function(resource) {
       this.loading = true;
-      let fetch_url = this.$config.localMetadataApiUrl + resource;
+      let fetch_url = this.$config.localMetadataApiUrl + "/" + resource;
       //console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
