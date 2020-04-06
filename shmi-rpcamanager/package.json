@@ -1,8 +1,19 @@
 {
   "name": "shmi-rpcamanager",
   "version": "1.0.0",
-  "description": "Serena Human Machine Interface RPCAManager Server",
+  "description": "Serena Human Machine Interface RPCAManager",
   "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon ./index.js"
+  },
+  "keywords": [
+    "serena",
+    "shmi",
+    "rpcamanager"
+  ],
+  "author": "Engineering Ingegneria Informatica, SynArea Consultants",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -14,10 +25,11 @@
     "morgan": "^1.9.1",
     "path": "^0.12.7"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "nodemon": "^1.19.4"
   },
-  "author": "Engineering Ingegneria Informatica, SynArea Consultants",
-  "license": "ISC"
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/Engineering-Research-and-Development/serena-shmi.git"
+  }
 }

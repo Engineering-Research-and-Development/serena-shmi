@@ -23,6 +23,7 @@
     "css-vars-ponyfill": "^2.0.2",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
+    "jquery": "^3.4.0",
     "perfect-scrollbar": "^1.4.0",
     "simple-line-icons": "^2.4.1",
     "vue-chartjs": "^3.4.2",
@@ -43,5 +44,9 @@
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Engineering-Research-and-Development/serena-shmi.git"
   }
 }
