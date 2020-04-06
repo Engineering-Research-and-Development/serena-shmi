@@ -118,6 +118,24 @@ router.get('/segment_types', function(req, res, next){
     })
 });
 
+router.get('/segment_type/:sg_db_site([0-9A-Z]+)/:sg_db_id([0-9]+)/:sg_type_code([0-9]+)', function(req, res, next){
+  var sg_db_site = req.params.sg_db_site;
+  var sg_db_id = req.params.sg_db_id;
+  var sg_type_code = req.params.sg_type_code;
+
+  var segment_type_id = sg_db_site +"/"+ sg_db_id + "/" + sg_type_code;
+
+  axios.get(config.nifiUrl+"/serena/1.0/segment_type/"+segment_type_id, {
+      proxy:false
+    })
+    .then(response => {
+      return res.json(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+});
+
 router.get('/assets', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/assets", {
       proxy:false
