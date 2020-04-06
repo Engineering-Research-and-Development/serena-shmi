@@ -6,7 +6,7 @@
         "mdi": "node ./shmi-mdinterface/index.js",
         "ws": "node ./shmi-webserver/index.js",
         "mdm": "node ./shmi-mdmanager/index.js",
-        "dash": "cd ./shmi-dashboard && npm run build",
+        "dash": "cd ./shmi-dashboard && npm run serve",
         "start": "npm-run-all -p mdi ws mdm dash",
         "mdi-i": "cd ./shmi-mdinterface && npm install --only=prod",
         "ws-i": "cd ./shmi-webserver && npm install --only=prod",
