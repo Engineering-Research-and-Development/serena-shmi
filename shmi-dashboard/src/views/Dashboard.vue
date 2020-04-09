@@ -283,7 +283,7 @@ export default {
       },
       dashboard_table_type_fields: {
         Enterprise: [
-          { key: "status", sortable: false },
+          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -292,7 +292,7 @@ export default {
           { key: "sites", sortable: false },
         ],
         Site: [
-          { key: "status", sortable: false },
+          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -302,7 +302,7 @@ export default {
           { key: "segments", sortable: false },
         ],
         Segment: [
-          { key: "status", sortable: false },
+          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -313,7 +313,7 @@ export default {
           { key: "assets", sortable: false },
         ],
         Asset: [
-          { key: "status", sortable: false },
+          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
