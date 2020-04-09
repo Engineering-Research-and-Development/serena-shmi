@@ -340,11 +340,12 @@ export default {
     },
     fetchData: function(resource) {
       this.loading = true;
+      console.log(resource);
       let fetch_url = this.$config.localMetadataApiUrl + "/" + resource;
-      //console.log(fetch_url);
+      console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
-          .get(fetch_url)
+          .get(fetch_url, { crossdomain: true })
           .then((response) => {
             // JSON responses are automatically parsed.
             //console.log(JSON.stringify(response.data));
