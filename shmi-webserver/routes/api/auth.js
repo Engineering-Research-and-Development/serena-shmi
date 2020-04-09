@@ -8,7 +8,7 @@ var auth = require('../auth');
 var config = require("../../config");
 
 var  db, gridFSBucket, storage, upload;
-const connection = mongoose.connect(config.mongoURI, { useNewUrlParser: true }, (err, client) => {
+const connection = mongoose.connect(config.mongoUri, { useNewUrlParser: true }, (err, client) => {
     console.log("Database is connected");
     db = client.db;
     gridFSBucket = new mongoose.mongo.GridFSBucket(client.db);

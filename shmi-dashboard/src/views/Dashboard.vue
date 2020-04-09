@@ -339,8 +339,8 @@ export default {
     },
     fetchData: function(resource) {
       this.loading = true;
-      let fetch_url = this.$config.localMetadataApiUrl + resource;
-      //console.log(fetch_url);
+      let fetch_url = this.$config.localMetadataApiUrl + "/" + resource;
+      console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
           .get(fetch_url)
@@ -367,8 +367,8 @@ export default {
       return -1;
     },
     GetEnterprises() {
-      this.fetchData("/enterprises").then((result) => {
-        result.enterprises.forEach((enterprise) => {
+      this.fetchData("enterprises").then(result => {
+        result.enterprises.forEach(enterprise => {
           if (
             enterprise.name != "MIMOSA" ||
             enterprise["@id"] != "serena:enterprise/0"

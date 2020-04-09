@@ -1,31 +1,29 @@
-process.env.NODE_ENV = "development";
-
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan");
 const path = require("path");
 const errorhandler = require("errorhandler");
 const bodyParser = require("body-parser");
+//const session = require('express-session');
 
-var isProduction = process.env.NODE_ENV === "production";
-
+require('dotenv').config();
 const config = require("./config");
-require("./models/User");
+
+var isProduction = config.stage;
 
 const app = express();
-
-app.use(cors());
-
-app.set("views", path.join(__dirname + "/public/app/views/"));
-
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(require("method-override")());
 app.use(express.static(__dirname + "/public"));
 app.use(cors());
+//app.use(session({ secret: config.secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
 if (!isProduction) {
   app.use(errorhandler());
 }
+
+//MONGODB CONNECTOR
+//require("./models/User");
 
 /// catch 404 and forward to error handler
 app.use(require("./routes"));
@@ -36,7 +34,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-var isProduction = process.env.NODE_ENV === "production";
 /// error handlers
 if (!isProduction) {
   app.use(function(err, req, res, next) {
@@ -64,9 +61,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
-const myPort = 9090;
-app.listen(process.env.PORT || myPort, function() {
+app.listen(config.port, function() {
   console.log(
-    "SHMI back-end is up and running and it's listening on port:" + myPort
+    "SHMI back-end is up and running and it's listening on port:" + config.port
   );
 });
