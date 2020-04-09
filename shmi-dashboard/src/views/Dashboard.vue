@@ -162,8 +162,7 @@
                   :label="chartLabel"
                   :data="chartData"
                   :labels="chartLabels"
-                  backgroundColor: brandPrimary,
-                  borderColor: rgba(255,255,255,.55),
+                  :borderColor="chartBorder"
                 />
               </template>
               <b-button
@@ -266,6 +265,8 @@ export default {
       chartLabel: "",
       chartData: [],
       chartLabels: [],
+      chartBG: "rgba(255,255,255,.55)",
+      chartBorder: "#20a8d8",
       type_illustration: {
         enterprise: "img/illustrations/svg/noun_companies.svg",
         site: "img/illustrations/svg/noun_site.svg",
@@ -340,7 +341,7 @@ export default {
     fetchData: function(resource) {
       this.loading = true;
       let fetch_url = this.$config.localMetadataApiUrl + "/" + resource;
-      console.log(fetch_url);
+      //console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
           .get(fetch_url)
@@ -572,6 +573,8 @@ export default {
       this.chartId = response.id;
       this.chartTitle = response.title + " - RUL trend";
       this.chartLabels = labels;
+      this.chartBG = "#20a8d8";
+      this.chartBorder = "rgba(255,255,255,.55)";
       //console.log(this.chartLabels);
       this.chartData = data;
       //console.log(this.chartData);
@@ -635,7 +638,18 @@ export default {
             });
         });
       } else if (this.dashboard_card_elements[0].type == "meas_location") {
-        return;
+        this.dashboard_card_elements.forEach((element) => {
+        console.log({element});
+          /*this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
+            .then((result) => {
+              console.log(result);
+              tmp.push(this.DashboardTableElement(result));
+              this.SelectTableFields(result["@type"]);
+            })
+            .catch((error) => {
+              console.log(error);
+            });*/
+        });
       } else {
         this.dashboard_card_elements.forEach((element) => {
           this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
@@ -685,7 +699,7 @@ export default {
             site_type: item.site_type.name,
             name: item.name,
             segments: children,
-            status: "Inactive",
+            //status: "Inactive",
           };
           break;
         case "Segment":
@@ -704,7 +718,7 @@ export default {
             name: item.name,
             sg_hyp_events: sg_hyp_events,
             assets: children,
-            status: "Pending",
+            //status: "Pending",
           };
           break;
         case "Asset":
@@ -727,7 +741,7 @@ export default {
             name: item.name,
             as_hyp_events: as_hyp_events,
             meas_locations: children,
-            status: "Banned",
+            //status: "Banned",
           };
           break;
       }

@@ -1,7 +1,6 @@
 <script>
 import { Line } from "vue-chartjs";
 import { CustomTooltips } from "@coreui/coreui-plugin-chartjs-custom-tooltips";
-import { getStyle } from "@coreui/coreui/dist/js/coreui-utilities";
 
 export default {
   extends: Line,
@@ -20,6 +19,10 @@ export default {
     },
     bordercolor: {
       type: String,
+      default: "#20a8d8"
+    },
+    backgroundColor: {
+      type: String,
       default: "rgba(255,255,255,.55)"
     },
     data: {
@@ -33,11 +36,10 @@ export default {
   },
   methods: {
     RenderLineChart() {
-      var brandPrimary = getStyle("--primary") || "#20a8d8";
       var dataset = [
         {
           label: this.label,
-          backgroundColor: brandPrimary,
+          backgroundColor: this.backgroundColor,
           borderColor: this.bordercolor,
           data: this.chartData
         }
