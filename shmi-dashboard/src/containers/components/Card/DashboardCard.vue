@@ -1,47 +1,30 @@
 <template>
-  <!--<b-card class="shadow h-100 w-100">
-      <img
-        :v-if="card_img_path"
-        class="card-img-top img-fluid"
-        :src="card_img_path"
-        :alt="card_image_alt"
-      />
-      <div class="card-body">
-        <h5 :v-if="card_title" class="card-title">{{card_title}}</h5>
-        <p :v-if="card_body_text" class="card-text">{{card_body_text}}</p>
-        <p :v-if="card_text_muted" class="card-text">
-          <small class="text-muted">{{card_text_muted}}</small>
-        </p>
-        <div class="float-right">
-          <a
-            v-if="card_button_link"
-            :href="card_button_link"
-            class="btn btn-outline-primary"
-          >{{card_button_text}}</a>
-        </div>
-      </div>
-  </b-card>-->
-  <b-card class="shadow h-100" sm="6" md="3" xl="2" :title="card_title">
+  <b-card class="shadow h-100" :title="card_title">
     <img
       :v-if="card_img_path"
-      class="card-img-top img-fluid w-100 px-1"
+      class="card-img-top img-fluid w-60 px-1"
       :src="card_img_path"
       :alt="card_image_alt"
       v-on:click="ImageClicked"
     />
     <div class="card-body p-0">
-      <b-card-text>{{card_body_text}}</b-card-text>
-      <template v-if="(this.card_type.localeCompare(this.prediction_type) != 0 )? false:true">
+      <b-card-text>{{ card_body_text }}</b-card-text>
+      <template
+        v-if="
+          this.card_type.localeCompare(this.prediction_type) != 0 ? false : true
+        "
+      >
         <div
           class="circle_status mr-2"
           style="display: inline-block;vertical-align:middle;"
-          :style="{ 'background': this.label_color}"
+          :style="{ background: this.label_color }"
         ></div>
         <span
           :v-if="this.prediction.id"
           class="text-muted"
           style="display:inline-block;vertical-align:middle; margin-right:10px;"
-        >RUL: {{this.prediction.rul}} days</span>
+          >RUL: {{ this.prediction.rul }} days</span
+        >
       </template>
       <div class="float-right">
         <b-button
@@ -49,12 +32,17 @@
           v-if="card_button_link"
           variant="outline-dark"
           v-on:click="InfoBtnClicked"
-        >{{card_button_text}}</b-button>
+          >{{ card_button_text }}</b-button
+        >
       </div>
-      <template v-if="this.card_visualization_link? true:false">
+      <template v-if="this.card_visualization_link ? true : false">
         <div class="my-2">
           <span class="d-block">
-            <a class="font-weight-bold" :href="card_visualization_link" target="_blank">
+            <a
+              class="font-weight-bold"
+              :href="card_visualization_link"
+              target="_blank"
+            >
               <i class="fa fa-cube fa-fw"></i>
               3D visualization
             </a>
@@ -71,44 +59,44 @@ export default {
   props: {
     card_id: {
       type: String,
-      default: ""
+      default: "",
     },
     card_element: {
       type: Object,
-      default: null
+      default: null,
     },
     card_type: {
       type: String,
-      default: ""
+      default: "",
     },
     card_img_path: {
       type: String,
-      default: ""
+      default: "",
     },
     card_image_alt: {
       type: String,
-      default: ""
+      default: "",
     },
     card_title: {
       type: String,
-      default: ""
+      default: "",
     },
     card_body_text: {
       type: String,
-      default: ""
+      default: "",
     },
     card_button_text: {
       type: String,
-      default: ""
+      default: "",
     },
     card_button_link: {
       type: String,
-      default: ""
+      default: "",
     },
     card_visualization_link: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   data() {
     return {
@@ -116,50 +104,45 @@ export default {
         neutro: "lightgray",
         good: "lightgreen",
         warning: "yellow",
-        alarm: "red"
+        alarm: "red",
       },
       prediction: {
         id: "",
         ts: "",
         label: -1,
-        rul: -1
+        rul: -1,
       },
       interval: null,
       prediction_type: "segment",
       polling_interval: "50000",
       label_color: "blue",
-      arrayPredictions: null
+      arrayPredictions: null,
     };
   },
   methods: {
     fetchData: function(resource) {
       this.loading = true;
-      //let fetch_url = this.$config.localMetadataApiUrl + resource;
-      let fetch_url =
-        this.$config.serenaDigestPredictionUrl + "?id=" + resource;
+      //let fetch_url = this.$config.serenaDigestPredictionUrl + "?id=" + resource;
+      let fetch_url = this.$config.serenaDigestPredictionUrl + "/" + resource;
       console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
           .get(fetch_url)
-          .then(response => {
+          .then((response) => {
             // JSON responses are automatically parsed.
             //console.log(JSON.stringify(response.data));
             //this.enterprises = response.data.enterprises;
             resolve(response.data);
           })
-          .catch(e => {
-            console.log(e);
-            if(e.status == 404)
-              resolve(console.log('404'));
-            else
-              reject(console.log(e.xhr));
+          .catch(function(e) {
+            reject(console.log(e));
           });
       });
     },
-    ImageClicked(){
+    ImageClicked() {
       var response = {
         id: this.card_id,
-        type: this.card_type
+        type: this.card_type,
       };
       this.$emit("cardClicked", response);
     },
@@ -167,7 +150,7 @@ export default {
       var response = {
         id: this.card_id,
         title: this.card_title,
-        predictions: this.arrayPredictions
+        predictions: this.arrayPredictions,
       };
       this.$emit("infoClicked", response);
     },
@@ -177,7 +160,7 @@ export default {
         //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
         //with serenaDigestPredictionUrl
         this.SerenaResourceAddressFromURL(this.card_id)
-      ).then(result => {
+      ).then((result) => {
         this.UpdateRul(result.prediction[0]);
       });
     },
@@ -204,7 +187,7 @@ export default {
         default:
           return this.colors.neutro;
       }
-    }
+    },
   },
   created() {
     this.arrayPredictions = new Array();
@@ -219,10 +202,9 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.interval);
-  }
+  },
 };
 </script>
-
 
 <style scoped>
 .circle_status {

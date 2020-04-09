@@ -14,7 +14,7 @@
                 :navLinkItem="{
                   name: 'Dashboard',
                   url: '/dashboard',
-                  icon: 'cui-speedometer'
+                  icon: 'cui-speedometer',
                 }"
                 @click="alert('cucu')"
               />
@@ -103,12 +103,15 @@
                               v-for="(child_2, child_2_index) in child.children"
                             >
                               <SidebarNavItem>
-                                <SidebarNavLink
-                                  :navLinkItem="child_2"
-                                  :badge="child_2.badge"
-                                  :variant="child_2.variant"
-                                  :attributes="{disabled:true}"
-                                />
+                                <a
+                                  :class="['nav-link']"
+                                  :id="child_2.id"
+                                  :type="child_2.type"
+                                  v-on:click.prevent="ShowChildren(child_2)"
+                                >
+                                  <i :class="['nav-icon',child_2.icon]"></i>
+                                  {{ child_2.name }}
+                                </a>
                               </SidebarNavItem>
                             </li>
                             <!-- 3rd Level depth NavLink -->
@@ -159,6 +162,8 @@
                   :label="chartLabel"
                   :data="chartData"
                   :labels="chartLabels"
+                  backgroundColor: brandPrimary,
+                  borderColor: rgba(255,255,255,.55),
                 />
               </template>
               <b-button
@@ -244,7 +249,7 @@ export default {
     DashboardCard,
     SidebarNavDropdown,
     dTable,
-    LineChart
+    LineChart,
   },
   data: function() {
     return {
@@ -266,13 +271,14 @@ export default {
         site: "img/illustrations/svg/noun_site.svg",
         segment: "img/illustrations/svg/noun_segment_1.svg",
         asset: "img/illustrations/svg/noun_bicycle_chain.svg",
-        meas_location: "img/illustrations/svg/noun_meas_locations.svg"
+        meas_location: "img/illustrations/svg/noun_meas_locations.svg",
       },
       visualization_links: {
+        //Vanno poi inseriti nel config
         "Punching Tool":
           "http://serena:9008/SynAreaDashboard/pages/use-case/kone/visualization/combi/index.html",
         RobotBox:
-          "http://serena:9008/SynAreaDashboard/pages/use-case/comau/visualization/robotbox/index.html"
+          "http://serena:9008/SynAreaDashboard/pages/use-case/comau/visualization/robotbox/index.html",
       },
       dashboard_table_type_fields: {
         Enterprise: [
@@ -282,7 +288,7 @@ export default {
           { key: "@type", sortable: true },
           { key: "enterprise_id", sortable: true },
           { key: "enterprise_type", sortable: false },
-          { key: "sites", sortable: false }
+          { key: "sites", sortable: false },
         ],
         Site: [
           { key: "status", sortable: false },
@@ -292,7 +298,7 @@ export default {
           { key: "enterprise_id", sortable: true },
           { key: "site_id", sortable: true },
           { key: "site_type", sortable: false },
-          { key: "segments", sortable: false }
+          { key: "segments", sortable: false },
         ],
         Segment: [
           { key: "status", sortable: false },
@@ -303,7 +309,7 @@ export default {
           { key: "segment_id", sortable: true },
           { key: "segment_type", sortable: false },
           { key: "sg_hyp_events", sortable: false },
-          { key: "assets", sortable: false }
+          { key: "assets", sortable: false },
         ],
         Asset: [
           { key: "status", sortable: false },
@@ -318,9 +324,9 @@ export default {
           { key: "serial_number", sortable: true },
           { key: "long_description", sortable: false },
           { key: "as_hyp_events", sortable: false },
-          { key: "meas_locations", sortable: false }
-        ]
-      }
+          { key: "meas_locations", sortable: false },
+        ],
+      },
     };
   },
   methods: {
@@ -328,7 +334,7 @@ export default {
       this.$bvToast.toast(body, {
         title: title,
         variant: variant,
-        solid: true
+        solid: true,
       });
     },
     fetchData: function(resource) {
@@ -338,14 +344,14 @@ export default {
       return new Promise((resolve, reject) => {
         this.$http
           .get(fetch_url)
-          .then(response => {
+          .then((response) => {
             // JSON responses are automatically parsed.
             //console.log(JSON.stringify(response.data));
             //this.enterprises = response.data.enterprises;
             this.loading = false;
             resolve(response.data);
           })
-          .catch(e => {
+          .catch((e) => {
             this.loading = false;
             //console.log(JSON.stringify(e));
             reject(this.makeToast("danger", "Error", e.message));
@@ -361,8 +367,8 @@ export default {
       return -1;
     },
     GetEnterprises() {
-      this.fetchData("/enterprises").then(result => {
-        result.enterprises.forEach(enterprise => {
+      this.fetchData("/enterprises").then((result) => {
+        result.enterprises.forEach((enterprise) => {
           if (
             enterprise.name != "MIMOSA" ||
             enterprise["@id"] != "serena:enterprise/0"
@@ -373,7 +379,7 @@ export default {
               url: this.LocalNifiResourceAddressFromURL(enterprise["@id"]),
               type: "enterprise",
               icon: "fa fa-industry",
-              children: []
+              children: [],
             };
             this.nav_dropdown_items.push(obj);
           }
@@ -382,8 +388,8 @@ export default {
       });
     },
     GetSites(enterprise, index) {
-      this.fetchData(enterprise.url).then(result => {
-        result.sites.forEach(site => {
+      this.fetchData(enterprise.url).then((result) => {
+        result.sites.forEach((site) => {
           if (this.ChildExists(enterprise.children, site["@id"]) == -1) {
             var obj = {
               id: site["@id"],
@@ -392,7 +398,7 @@ export default {
               type: "site",
               icon: "fa fa-map-pin",
               enterprise_index: index,
-              children: []
+              children: [],
             };
             enterprise.children.push(obj);
           }
@@ -401,8 +407,8 @@ export default {
       });
     },
     GetSegments(site, index) {
-      this.fetchData(site.url).then(result => {
-        result.segments.forEach(segment => {
+      this.fetchData(site.url).then((result) => {
+        result.segments.forEach((segment) => {
           if (this.ChildExists(site.children, segment["@id"]) == -1) {
             var obj = {
               id: segment["@id"],
@@ -415,7 +421,7 @@ export default {
               visualization_link: this.visualization_links[segment.name]
                 ? this.visualization_links[segment.name]
                 : "",
-              children: []
+              children: [],
             };
             //console.log(obj);
             site.children.push(obj);
@@ -426,8 +432,8 @@ export default {
     },
     GetAssets(segment, index) {
       //alert(segment.url);
-      this.fetchData(segment.url).then(result => {
-        result.assets.forEach(asset => {
+      this.fetchData(segment.url).then((result) => {
+        result.assets.forEach((asset) => {
           if (this.ChildExists(segment.children, asset["@id"]) == -1) {
             var obj = {
               id: asset["@id"],
@@ -438,9 +444,10 @@ export default {
               enterprise_index: segment.enterprise_index,
               site_index: segment.site_index,
               segment_index: index,
-              children: []
+              children: [],
             };
             segment.children.push(obj);
+            console.log(obj);
           }
         });
         this.ShowDashboardCards(segment.children);
@@ -450,9 +457,9 @@ export default {
       //Load meas locations
       console.log(index + " --- " + JSON.stringify(asset));
       //alert(segment.url);
-      this.fetchData(asset.url).then(result => {
+      this.fetchData(asset.url).then((result) => {
         console.log(JSON.stringify(result));
-        result.meas_locations.forEach(meas => {
+        result.meas_locations.forEach((meas) => {
           if (this.ChildExists(asset.children, meas["@id"]) == -1) {
             var obj = {
               id: meas["@id"],
@@ -463,7 +470,7 @@ export default {
               enterprise_index: asset.enterprise_index,
               site_index: asset.site_index,
               segment_index: asset.segment_index,
-              asset_index: index
+              asset_index: index,
             };
             asset.children.push(obj);
           }
@@ -476,7 +483,7 @@ export default {
       console.log(asset_index + " --- " + JSON.stringify(asset));
     },
     GetChildren(value) {
-      console.log(JSON.stringify(value));
+      //console.log(JSON.stringify(value));
       switch (value.type) {
         case "enterprise":
           var ent_index = this.nav_dropdown_items.indexOf(value);
@@ -500,7 +507,6 @@ export default {
             .children[value.site_index].children[segment_index];
           this.GetAssets(segment, segment_index);
           break;
-        //TODO
         case "asset":
           var asset_index = this.nav_dropdown_items[
             value.enterprise_index
@@ -517,13 +523,13 @@ export default {
     },
     ShowDashboardCards(array) {
       var tmp = [];
-      array.forEach(element => {
+      array.forEach((element) => {
         tmp.push({
           id: element.id,
           name: element.name,
           url: element.url,
           type: element.type,
-          visualization_link: element.visualization_link
+          visualization_link: element.visualization_link,
         });
       });
       this.dashboard_card_elements = tmp;
@@ -578,20 +584,20 @@ export default {
       // Using HTML string
       const titleVNode = h("div", {
         domProps: { innerHTML: "Title from <i>HTML<i> string" },
-        class: ["bg-dark,text-light"]
+        class: ["bg-dark,text-light"],
       });
       // More complex structure
       const messageVNode = h("div", { class: ["container", "bg-dark"] }, [
         h("p", { class: ["text-center", "text-primary"] }, [
           " Paragraph text: ",
           h("strong", {}, "Strong text"),
-          " and normal text "
+          " and normal text ",
         ]),
         h("p", { class: ["text-center"] }, [
           h("b-spinner", {
             class: ["bg-primary"],
-            style: [{ color: "#FFAABB" }]
-          })
+            style: [{ color: "#FFAABB" }],
+          }),
         ]),
         h("b-img", {
           props: {
@@ -599,36 +605,45 @@ export default {
             thumbnail: true,
             center: true,
             fluid: true,
-            rounded: "circle"
-          }
-        })
+            rounded: "circle",
+          },
+        }),
       ]);
       const footerVNode = h("footer", {}, [
         "Footer text",
-        h("p", {}, "this is a footer, yeeeee")
+        h("p", {}, "this is a footer, yeeeee"),
       ]);
       // We must pass the generated VNodes as arrays
       this.$bvModal.msgBoxOk([messageVNode, footerVNode], {
         title: [titleVNode],
         buttonSize: "lg",
         centered: true,
-        size: "lg"
+        size: "lg",
       });
     },
     ShowTableData() {
       var tmp = [];
       if (this.dashboard_card_elements[0].type == "asset") {
-        return;
-      } else if (this.dashboard_card_elements[0].type == "meas_location") {
-        return;
-      } else {
-        this.dashboard_card_elements.forEach(element => {
+        this.dashboard_card_elements.forEach((element) => {
           this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
-            .then(result => {
+            .then((result) => {
               tmp.push(this.DashboardTableElement(result));
               this.SelectTableFields(result["@type"]);
             })
-            .catch(error => {
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      } else if (this.dashboard_card_elements[0].type == "meas_location") {
+        return;
+      } else {
+        this.dashboard_card_elements.forEach((element) => {
+          this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
+            .then((result) => {
+              tmp.push(this.DashboardTableElement(result));
+              this.SelectTableFields(result["@type"]);
+            })
+            .catch((error) => {
               console.log(error);
             });
         });
@@ -655,7 +670,7 @@ export default {
             enterprise_type: item.enterprise_type.name,
             name: item.name,
             sites: children,
-            status: "Active"
+            status: "Active",
           };
           break;
         case "Site":
@@ -670,7 +685,7 @@ export default {
             site_type: item.site_type.name,
             name: item.name,
             segments: children,
-            status: "Inactive"
+            status: "Inactive",
           };
           break;
         case "Segment":
@@ -689,7 +704,7 @@ export default {
             name: item.name,
             sg_hyp_events: sg_hyp_events,
             assets: children,
-            status: "Pending"
+            status: "Pending",
           };
           break;
         case "Asset":
@@ -712,7 +727,7 @@ export default {
             name: item.name,
             as_hyp_events: as_hyp_events,
             meas_locations: children,
-            status: "Banned"
+            status: "Banned",
           };
           break;
       }
@@ -738,7 +753,7 @@ export default {
     scrollHandle(evt) {
       //console.log(evt)
       return evt;
-    }
+    },
   },
   created() {
     this.loading = false;
@@ -752,7 +767,7 @@ export default {
     },
     list() {
       return this.$route.matched.filter(
-        route => route.name || route.meta.label
+        (route) => route.name || route.meta.label
       );
     },
     psSettings: () => {
@@ -763,10 +778,10 @@ export default {
         suppressScrollX:
           getComputedStyle(document.querySelector("html")).direction !== "rtl",
         wheelPropagation: false,
-        interceptRailY: styles => ({ ...styles, height: 0 })
+        interceptRailY: (styles) => ({ ...styles, height: 0 }),
       };
-    }
-  }
+    },
+  },
 };
 </script>
 
