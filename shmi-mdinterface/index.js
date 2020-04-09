@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const path = require("path");
 const errorhandler = require('errorhandler');
 
-require('dotenv').config();
+//require('dotenv').config();
 const config = require("./config");
 
 var isProduction = config.stage;

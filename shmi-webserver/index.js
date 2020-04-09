@@ -63,6 +63,7 @@ app.use(function(err, req, res, next) {
 
 app.listen(config.port, function() {
   console.log(
-    "SHMI back-end is up and running and it's listening on port:" + config.port
+    "SHMI back-end is up and running and it's listening on port:" + config.port,
+    "shmi_mdinterface identified on:" + config.metadataInterfaceUrl
   );
 });
