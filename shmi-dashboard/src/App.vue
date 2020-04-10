@@ -4,17 +4,17 @@
 
 <style lang="scss">
 // CoreUI Icons Set
-@import "~@coreui/icons/css/coreui-icons.min.css";
+@import "../node_modules/@coreui/icons/css/coreui-icons.min.css";
 /* Import Font Awesome Icons Set */
-$fa-font-path: "~font-awesome/fonts/";
-@import "~font-awesome/scss/font-awesome.scss";
+$fa-font-path: "../node_modules/font-awesome/fonts/";
+@import "../node_modules/font-awesome/scss/font-awesome.scss";
 /* Import Simple Line Icons Set */
-$simple-line-font-path: "~simple-line-icons/fonts/";
-@import "~simple-line-icons/scss/simple-line-icons.scss";
+$simple-line-font-path: "../node_modules/simple-line-icons/fonts/";
+@import "../node_modules/simple-line-icons/scss/simple-line-icons.scss";
 /* Import Flag Icons Set */
-@import "~flag-icon-css/css/flag-icon.min.css";
+@import "../node_modules/flag-icon-css/css/flag-icon.min.css";
 /* Import Bootstrap Vue Styles */
-@import "~bootstrap-vue/dist/bootstrap-vue.css";
+@import "../node_modules/bootstrap-vue/dist/bootstrap-vue.css";
 // Import Main styles for this application
-@import "assets/scss/style";
+@import "../src/assets/scss/style";
 </style>
