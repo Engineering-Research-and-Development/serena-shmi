@@ -8,4 +8,8 @@ module.exports = {
   metadataInterfaceUrl:  process.env.NODE_ENV === 'production' 
   ? "http://"+process.env.MD_INTERFACE_HOST+":"+process.env.MD_INTERFACE_PORT
   : "http://localhost:4444",
+
+  dashboardUrl:  process.env.NODE_ENV === 'production' 
+  ? "http://"+process.env.DASHBOARD_HOST+":"+process.env.DASHBOARD_PORT
+  : "http://localhost:80",
 };
