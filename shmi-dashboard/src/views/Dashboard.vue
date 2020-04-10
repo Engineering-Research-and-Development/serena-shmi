@@ -345,7 +345,7 @@ export default {
       console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
-          .get(fetch_url, { crossdomain: true })
+          .get(fetch_url)
           .then((response) => {
             // JSON responses are automatically parsed.
             //console.log(JSON.stringify(response.data));

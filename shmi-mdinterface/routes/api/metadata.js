@@ -6,7 +6,7 @@ const config = require("../../config");
 
 router.get('/enterprises', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/enterprises", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -18,7 +18,7 @@ router.get('/enterprises', function(req, res, next){
 
 router.get('/enterprise/:enterprise_id', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/enterprise/"+req.params.enterprise_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -30,7 +30,7 @@ router.get('/enterprise/:enterprise_id', function(req, res, next){
 
 router.get('/enterprise_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/enterprise_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -42,7 +42,7 @@ router.get('/enterprise_types', function(req, res, next){
 
 router.get('/sites', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/sites", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -54,7 +54,7 @@ router.get('/sites', function(req, res, next){
 
 router.get('/site/:site_id', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/site/"+req.params.site_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -67,7 +67,7 @@ router.get('/site/:site_id', function(req, res, next){
 
 router.get('/site_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/site_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -79,7 +79,7 @@ router.get('/site_types', function(req, res, next){
 
 router.get('/segments', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/segments", {
-     proxy:false
+     crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -96,7 +96,7 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
   var segment_id = segment_prefix +"/"+ segment_suffix;
 
   axios.get(config.nifiUrl+"/serena/1.0/segment/"+segment_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -108,7 +108,7 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
 
 router.get('/segment_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/segment_types", {
-     proxy:false
+     crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -126,7 +126,7 @@ router.get('/segment_type/:sg_db_site([0-9A-Z]+)/:sg_db_id([0-9]+)/:sg_type_code
   var segment_type_id = sg_db_site +"/"+ sg_db_id + "/" + sg_type_code;
 
   axios.get(config.nifiUrl+"/serena/1.0/segment_type/"+segment_type_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -138,7 +138,7 @@ router.get('/segment_type/:sg_db_site([0-9A-Z]+)/:sg_db_id([0-9]+)/:sg_type_code
 
 router.get('/assets', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/assets", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -155,7 +155,7 @@ router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req
   var asset_id = asset_prefix +"/"+ asset_suffix;
 
   axios.get(config.nifiUrl+"/serena/1.0/asset/"+asset_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -167,7 +167,7 @@ router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req
 
 router.get('/asset_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/asset_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -185,7 +185,7 @@ router.get('/asset_type/:as_db_site([0-9A-Z]+)/:as_db_id([0-9]+)/:as_type_code([
   var asset_type_id = as_db_site +"/"+ as_db_id + "/" + as_type_code;
 
   axios.get(config.nifiUrl+"/serena/1.0/asset_type/"+asset_type_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -197,7 +197,7 @@ router.get('/asset_type/:as_db_site([0-9A-Z]+)/:as_db_id([0-9]+)/:as_type_code([
 
 router.get('/sg_as_event_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/sg_as_event_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -215,7 +215,7 @@ router.get('/sg_as_event_type/:ev_db_site([0-9A-Z]+)/:ev_db_id([0-9]+)/:ev_type_
   var sg_as_event_type_id = ev_db_site +"/"+ ev_db_id + "/" + ev_type_code;
 
   axios.get(config.nifiUrl+"/serena/1.0/sg_as_event_type/"+sg_as_event_type_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -227,7 +227,7 @@ router.get('/sg_as_event_type/:ev_db_site([0-9A-Z]+)/:ev_db_id([0-9]+)/:ev_type_
 
 router.get('/meas_loc_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/meas_loc_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -245,7 +245,7 @@ router.get('/meas_loc_type/:ml_db_site([0-9A-Z]+)/:ml_db_id([0-9]+)/:ml_type_cod
   var meas_loc_type_id = ml_db_site +"/"+ ml_db_id + "/" + ml_type_code;
 
   axios.get(config.nifiUrl+"/serena/1.0/meas_loc_type/"+meas_loc_type_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -257,7 +257,7 @@ router.get('/meas_loc_type/:ml_db_site([0-9A-Z]+)/:ml_db_id([0-9]+)/:ml_type_cod
 
 router.get('/eng_unit_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/eng_unit_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -275,7 +275,7 @@ router.get('/eng_unit_type/:eu_db_site([0-9A-Z]+)/:eu_db_id([0-9]+)/:eu_type_cod
   var eng_unit_type_id = eu_db_site +"/"+ eu_db_id + "/" + eu_type_code;
 
   axios.get(config.nifiUrl+"/serena/1.0/eng_unit_type/"+eng_unit_type_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -287,7 +287,7 @@ router.get('/eng_unit_type/:eu_db_site([0-9A-Z]+)/:eu_db_id([0-9]+)/:eu_type_cod
 
 router.get('/mloc_calc_types', function(req, res, next){
   axios.get(config.nifiUrl+"/serena/1.0/mloc_calc_types", {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -305,7 +305,7 @@ router.get('/mloc_calc_type/:mc_db_site([0-9A-Z]+)/:mc_db_id([0-9]+)/:mc_type_co
   var mloc_calc_type_id = mc_db_site +"/"+ mc_db_id + "/" + mc_type_code;
 
   axios.get(config.nifiUrl+"/serena/1.0/mloc_calc_type/"+mloc_calc_type_id, {
-      proxy:false
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
@@ -321,8 +321,8 @@ router.get('/digest_prediction/:digest_prefix([0-9A-Z]+)/:digest_suffix([0-9]+)'
 
   var digest_id = digest_prefix +"/"+ digest_suffix;
 
-  axios.get("http://serena:9012/digest_prediction?id="+digest_id, {
-      proxy:false
+  axios.get(config.nifiUrl_old+"/digest_prediction?id="+digest_id, {
+      crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
