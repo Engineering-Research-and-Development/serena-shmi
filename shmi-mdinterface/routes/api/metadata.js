@@ -5,7 +5,7 @@ const cjson = require('circular-json');
 const config = require("../../config");
 
 router.get('/enterprises', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/enterprises", {
+  axios.get(config.nifiUrl+"/enterprises", {
       crossdomain:true
     })
     .then(response => {
@@ -17,7 +17,7 @@ router.get('/enterprises', function(req, res, next){
 });
 
 router.get('/enterprise/:enterprise_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/enterprise/"+req.params.enterprise_id, {
+  axios.get(config.nifiUrl+"/enterprise/"+req.params.enterprise_id, {
       crossdomain:true
     })
     .then(response => {
@@ -29,7 +29,7 @@ router.get('/enterprise/:enterprise_id', function(req, res, next){
 });
 
 router.get('/enterprise_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/enterprise_types", {
+  axios.get(config.nifiUrl+"/enterprise_types", {
       crossdomain:true
     })
     .then(response => {
@@ -41,7 +41,7 @@ router.get('/enterprise_types', function(req, res, next){
 });
 
 router.get('/sites', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/sites", {
+  axios.get(config.nifiUrl+"/sites", {
       crossdomain:true
     })
     .then(response => {
@@ -53,7 +53,7 @@ router.get('/sites', function(req, res, next){
 });
 
 router.get('/site/:site_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/site/"+req.params.site_id, {
+  axios.get(config.nifiUrl+"/site/"+req.params.site_id, {
       crossdomain:true
     })
     .then(response => {
@@ -66,7 +66,7 @@ router.get('/site/:site_id', function(req, res, next){
 
 
 router.get('/site_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/site_types", {
+  axios.get(config.nifiUrl+"/site_types", {
       crossdomain:true
     })
     .then(response => {
@@ -78,7 +78,7 @@ router.get('/site_types', function(req, res, next){
 });
 
 router.get('/segments', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/segments", {
+  axios.get(config.nifiUrl+"/segments", {
      crossdomain:true
     })
     .then(response => {
@@ -95,7 +95,7 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
 
   var segment_id = segment_prefix +"/"+ segment_suffix;
 
-  axios.get(config.nifiUrl+"/serena/1.0/segment/"+segment_id, {
+  axios.get(config.nifiUrl+"/segment/"+segment_id, {
       crossdomain:true
     })
     .then(response => {
@@ -107,7 +107,7 @@ router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', functi
 });
 
 router.get('/segment_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/segment_types", {
+  axios.get(config.nifiUrl+"/segment_types", {
      crossdomain:true
     })
     .then(response => {
@@ -125,7 +125,7 @@ router.get('/segment_type/:sg_db_site([0-9A-Z]+)/:sg_db_id([0-9]+)/:sg_type_code
 
   var segment_type_id = sg_db_site +"/"+ sg_db_id + "/" + sg_type_code;
 
-  axios.get(config.nifiUrl+"/serena/1.0/segment_type/"+segment_type_id, {
+  axios.get(config.nifiUrl+"/segment_type/"+segment_type_id, {
       crossdomain:true
     })
     .then(response => {
@@ -137,7 +137,7 @@ router.get('/segment_type/:sg_db_site([0-9A-Z]+)/:sg_db_id([0-9]+)/:sg_type_code
 });
 
 router.get('/assets', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/assets", {
+  axios.get(config.nifiUrl+"/assets", {
       crossdomain:true
     })
     .then(response => {
@@ -154,7 +154,7 @@ router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req
 
   var asset_id = asset_prefix +"/"+ asset_suffix;
 
-  axios.get(config.nifiUrl+"/serena/1.0/asset/"+asset_id, {
+  axios.get(config.nifiUrl+"/asset/"+asset_id, {
       crossdomain:true
     })
     .then(response => {
@@ -166,7 +166,7 @@ router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req
 });
 
 router.get('/asset_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/asset_types", {
+  axios.get(config.nifiUrl+"/asset_types", {
       crossdomain:true
     })
     .then(response => {
@@ -184,7 +184,7 @@ router.get('/asset_type/:as_db_site([0-9A-Z]+)/:as_db_id([0-9]+)/:as_type_code([
 
   var asset_type_id = as_db_site +"/"+ as_db_id + "/" + as_type_code;
 
-  axios.get(config.nifiUrl+"/serena/1.0/asset_type/"+asset_type_id, {
+  axios.get(config.nifiUrl+"/asset_type/"+asset_type_id, {
       crossdomain:true
     })
     .then(response => {
@@ -196,7 +196,7 @@ router.get('/asset_type/:as_db_site([0-9A-Z]+)/:as_db_id([0-9]+)/:as_type_code([
 });
 
 router.get('/sg_as_event_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/sg_as_event_types", {
+  axios.get(config.nifiUrl+"/sg_as_event_types", {
       crossdomain:true
     })
     .then(response => {
@@ -214,7 +214,7 @@ router.get('/sg_as_event_type/:ev_db_site([0-9A-Z]+)/:ev_db_id([0-9]+)/:ev_type_
 
   var sg_as_event_type_id = ev_db_site +"/"+ ev_db_id + "/" + ev_type_code;
 
-  axios.get(config.nifiUrl+"/serena/1.0/sg_as_event_type/"+sg_as_event_type_id, {
+  axios.get(config.nifiUrl+"/sg_as_event_type/"+sg_as_event_type_id, {
       crossdomain:true
     })
     .then(response => {
@@ -226,7 +226,7 @@ router.get('/sg_as_event_type/:ev_db_site([0-9A-Z]+)/:ev_db_id([0-9]+)/:ev_type_
 });
 
 router.get('/meas_loc_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/meas_loc_types", {
+  axios.get(config.nifiUrl+"/meas_loc_types", {
       crossdomain:true
     })
     .then(response => {
@@ -244,7 +244,7 @@ router.get('/meas_loc_type/:ml_db_site([0-9A-Z]+)/:ml_db_id([0-9]+)/:ml_type_cod
 
   var meas_loc_type_id = ml_db_site +"/"+ ml_db_id + "/" + ml_type_code;
 
-  axios.get(config.nifiUrl+"/serena/1.0/meas_loc_type/"+meas_loc_type_id, {
+  axios.get(config.nifiUrl+"/meas_loc_type/"+meas_loc_type_id, {
       crossdomain:true
     })
     .then(response => {
@@ -256,7 +256,7 @@ router.get('/meas_loc_type/:ml_db_site([0-9A-Z]+)/:ml_db_id([0-9]+)/:ml_type_cod
 });
 
 router.get('/eng_unit_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/eng_unit_types", {
+  axios.get(config.nifiUrl+"/eng_unit_types", {
       crossdomain:true
     })
     .then(response => {
@@ -274,7 +274,7 @@ router.get('/eng_unit_type/:eu_db_site([0-9A-Z]+)/:eu_db_id([0-9]+)/:eu_type_cod
 
   var eng_unit_type_id = eu_db_site +"/"+ eu_db_id + "/" + eu_type_code;
 
-  axios.get(config.nifiUrl+"/serena/1.0/eng_unit_type/"+eng_unit_type_id, {
+  axios.get(config.nifiUrl+"/eng_unit_type/"+eng_unit_type_id, {
       crossdomain:true
     })
     .then(response => {
@@ -286,7 +286,7 @@ router.get('/eng_unit_type/:eu_db_site([0-9A-Z]+)/:eu_db_id([0-9]+)/:eu_type_cod
 });
 
 router.get('/mloc_calc_types', function(req, res, next){
-  axios.get(config.nifiUrl+"/serena/1.0/mloc_calc_types", {
+  axios.get(config.nifiUrl+"/mloc_calc_types", {
       crossdomain:true
     })
     .then(response => {
@@ -304,11 +304,46 @@ router.get('/mloc_calc_type/:mc_db_site([0-9A-Z]+)/:mc_db_id([0-9]+)/:mc_type_co
 
   var mloc_calc_type_id = mc_db_site +"/"+ mc_db_id + "/" + mc_type_code;
 
-  axios.get(config.nifiUrl+"/serena/1.0/mloc_calc_type/"+mloc_calc_type_id, {
+  axios.get(config.nifiUrl+"/mloc_calc_type/"+mloc_calc_type_id, {
       crossdomain:true
     })
     .then(response => {
       return res.json(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+});
+
+router.get('/meas_location/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)/:meas_loc_n([0-9]|10)', function(req, res, next){
+  var meas_loc_site = req.params.meas_loc_site;
+  var meas_loc_id = req.params.meas_loc_id;
+  var meas_loc_n = req.params.meas_loc_n;
+
+  var meas_loc_path = meas_loc_site +"/"+ meas_loc_id;
+  //http://serena:9093/serena/1.0/meas_location/0000006400000065/118?meas_event_latest=2&meas_event_full=true
+  axios.get(config.metadataServiceUrl+"/meas_location/"+meas_loc_path+"?meas_event_latest="+meas_loc_n+"&meas_event_full=true", {
+    crossdomain:true
+    })
+    .then(response => {
+      return res.json(response.data.meas_events);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+});
+
+router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', function(req, res, next){
+  var meas_loc_site = req.params.meas_loc_site;
+  var meas_loc_id = req.params.meas_loc_id;
+
+  var meas_loc_path = meas_loc_site +"/"+ meas_loc_id;
+  //http://serena:9093/last_meas_event/0000006400000065/118?meas_event_latest=10&meas_event_full=true
+  axios.get(config.nifiUrl_ws+"/last_meas_event/"+meas_loc_path, {
+    crossdomain:true
+    })
+    .then(response => {
+      return res.json(response.data.meas_events);
     })
     .catch(error => {
       console.log(error);
@@ -331,5 +366,6 @@ router.get('/digest_prediction/:digest_prefix([0-9A-Z]+)/:digest_suffix([0-9]+)'
       console.log(error);
     })
 });
+
 
 module.exports = router;

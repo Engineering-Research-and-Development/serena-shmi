@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const errorhandler = require("errorhandler");
 const bodyParser = require("body-parser");
+const history = require("connect-history-api-fallback");
 //const session = require('express-session');
 
 require('dotenv').config();
@@ -14,7 +15,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(require("method-override")());
-app.use(express.static(__dirname + "/public"));
+//app.use(express.static(__dirname + "/public"));
 app.use(cors());
 //app.use(session({ secret: config.secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
@@ -27,6 +28,16 @@ if (!isProduction) {
 
 /// catch 404 and forward to error handler
 app.use(require("./routes"));
+
+const staticFileMiddleware = express.static('public');
+app.use(staticFileMiddleware);
+app.use(history({
+  disableDotRule: true,
+  verbose: true
+}));
+app.use(staticFileMiddleware);
+
+//app.get(/.*/,(req,res)=>res.sendFile(path.resolve(__dirname,'public/index.html')))
 
 app.use(function(req, res, next) {
   var err = new Error("Not Found");

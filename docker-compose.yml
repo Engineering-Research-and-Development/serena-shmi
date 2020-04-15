@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+
+    shmi_webserver:
+        hostname: shmi_webserver
+        image: node:10
+        networks:
+          - hostnet
+        ports:
+          - "9090:9090"
+        user: "node"
+        working_dir: /home/node/app
+        depends_on:
+          - shmi_mdinterface
+        environment:
+          - NODE_ENV=production
+          - PORT=9090
+          - MD_INTERFACE_HOST=shmi_mdinterface
+          - MD_INTERFACE_PORT=4444
+        volumes:
+          - ./shmi-webserver:/home/node/app
+          - ./shmi-dashboard-dist/:/home/node/app/public/
+        command: "npm start"
+
+    shmi_mdinterface:
+        hostname: shmi_mdinterface
+        image: node:10
+        networks:
+          - hostnet
+        expose:
+          - "4444"
+        user: "node"
+        working_dir: /home/node/app
+        environment:
+          - NODE_ENV=production
+          - PORT=4444
+          - NIFI_HOST=10.10.2.42
+          - NIFI_PORT=9093
+          - NIFI_PORT_OLD=9012
+        volumes:
+          - ./shmi-mdinterface:/home/node/app
+        command: "npm start"
+
+networks:
+   hostnet:
