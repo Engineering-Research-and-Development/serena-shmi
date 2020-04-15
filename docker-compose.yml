@@ -15,7 +15,7 @@ services:
           - shmi_mdinterface
         environment:
           - NODE_ENV=production
-          - PORT=9090
+          - WEBPORT=9090
           - MD_INTERFACE_HOST=shmi_mdinterface
           - MD_INTERFACE_PORT=4444
         volumes:
@@ -34,7 +34,7 @@ services:
         working_dir: /home/node/app
         environment:
           - NODE_ENV=production
-          - PORT=4444
+          - MDIFPORT=4444
           - NIFI_HOST=10.10.2.42
           - NIFI_PORT=9093
           - NIFI_PORT_OLD=9012
