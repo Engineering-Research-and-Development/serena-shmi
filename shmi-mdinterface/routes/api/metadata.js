@@ -415,14 +415,14 @@ router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', functio
 
   var prediction_path = site_id +"/"+ segment_id;
 
-  if(req.header('BrowserSite') == null || req.header('BrowserSite') != prediction_path){
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != site_id){
     return res.json({
       error: "401",
       message: "You lack of proper privileges to access this resource on SHMI"
     })
   }
 
-  axios.get(config.nifiUrl_old+"/digest_prediction?id="+digest_id, {
+  axios.get(config.nifiUrl_old+"/digest_prediction?id="+prediction_path, {
       crossdomain:true
     })
     .then(response => {
