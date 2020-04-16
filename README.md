@@ -74,3 +74,7 @@ $ clearEnv.sh
 ```sh
 \# docker-compose up
 ```
+
+Primary Authors
+* __Manfredi Pistone (ENGINEERING - ingegneria informatica s.p.a)
+* __Salvatore Andolina (SynArea Consultants s.r.l)
