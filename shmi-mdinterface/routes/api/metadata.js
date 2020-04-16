@@ -5,7 +5,14 @@ const cjson = require('circular-json');
 const config = require("../../config");
 
 router.get('/enterprises', function(req, res, next){
-  axios.get(config.nifiUrl+"/enterprises", {
+  if(req.header('BrowserEnterprise') == null){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
+  axios.get("http://127.0.0.1:"+config.port+"/api/1.0/enterprise/"+enterprise_id, {
       crossdomain:true
     })
     .then(response => {
@@ -40,20 +47,29 @@ router.get('/enterprise_types', function(req, res, next){
     })
 });
 
-router.get('/sites', function(req, res, next){
-  axios.get(config.nifiUrl+"/sites", {
-      crossdomain:true
-    })
-    .then(response => {
-      return res.json(response.data);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-});
+// router.get('/sites', function(req, res, next){
+//   axios.get(config.nifiUrl+"/sites", {
+//       crossdomain:true
+//     })
+//     .then(response => {
+//       return res.json(response.data);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     })
+// });
 
 router.get('/site/:site_id', function(req, res, next){
-  axios.get(config.nifiUrl+"/site/"+req.params.site_id, {
+  var site_id = req.params.site_id;
+
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != site_id){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
+  axios.get(config.nifiUrl+"/site/"+ site_id, {
       crossdomain:true
     })
     .then(response => {
@@ -77,25 +93,32 @@ router.get('/site_types', function(req, res, next){
     })
 });
 
-router.get('/segments', function(req, res, next){
-  axios.get(config.nifiUrl+"/segments", {
-     crossdomain:true
-    })
-    .then(response => {
-      return res.json(response.data);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-});
+// router.get('/segments', function(req, res, next){
+//   axios.get(config.nifiUrl+"/segments", {
+//      crossdomain:true
+//     })
+//     .then(response => {
+//       return res.json(response.data);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     })
+// });
 
-router.get('/segment/:segment_prefix([0-9A-Z]+)/:segment_suffix([0-9]+)', function(req, res, next){
-  var segment_prefix = req.params.segment_prefix;
-  var segment_suffix = req.params.segment_suffix;
+router.get('/segment/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', function(req, res, next){
+  var site_id = req.params.site_id;
+  var segment_id = req.params.segment_id;
 
-  var segment_id = segment_prefix +"/"+ segment_suffix;
+  var segment_path = site_id +"/"+ segment_id;
+  
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != site_id){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
 
-  axios.get(config.nifiUrl+"/segment/"+segment_id, {
+  axios.get(config.nifiUrl+"/segment/"+segment_path, {
       crossdomain:true
     })
     .then(response => {
@@ -136,25 +159,32 @@ router.get('/segment_type/:sg_db_site([0-9A-Z]+)/:sg_db_id([0-9]+)/:sg_type_code
     })
 });
 
-router.get('/assets', function(req, res, next){
-  axios.get(config.nifiUrl+"/assets", {
-      crossdomain:true
-    })
-    .then(response => {
-      return res.json(response.data);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-});
+// router.get('/assets', function(req, res, next){
+//   axios.get(config.nifiUrl+"/assets", {
+//       crossdomain:true
+//     })
+//     .then(response => {
+//       return res.json(response.data);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     })
+// });
 
-router.get('/asset/:asset_prefix([0-9A-Z]+)/:asset_suffix([0-9]+)', function(req, res, next){
-  var asset_prefix = req.params.asset_prefix;
-  var asset_suffix = req.params.asset_suffix;
+router.get('/asset/:site_id([0-9A-Z]+)/:asset_id([0-9]+)', function(req, res, next){
+  var site_id = req.params.site_id;
+  var asset_id = req.params.asset_id;
 
-  var asset_id = asset_prefix +"/"+ asset_suffix;
+  var asset_path = site_id +"/"+ asset_id;
 
-  axios.get(config.nifiUrl+"/asset/"+asset_id, {
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != site_id){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
+  axios.get(config.nifiUrl+"/asset/"+asset_path, {
       crossdomain:true
     })
     .then(response => {
@@ -321,6 +351,14 @@ router.get('/meas_location/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)/:meas_
   var meas_loc_n = req.params.meas_loc_n;
 
   var meas_loc_path = meas_loc_site +"/"+ meas_loc_id;
+
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != meas_loc_site){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
   //http://serena:9093/serena/1.0/meas_location/0000006400000065/118?meas_event_latest=2&meas_event_full=true
   axios.get(config.metadataServiceUrl+"/meas_location/"+meas_loc_path+"?meas_event_latest="+meas_loc_n+"&meas_event_full=true", {
     crossdomain:true
@@ -338,6 +376,14 @@ router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', fu
   var meas_loc_id = req.params.meas_loc_id;
 
   var meas_loc_path = meas_loc_site +"/"+ meas_loc_id;
+
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != meas_loc_site){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
   //http://serena:9093/last_meas_event/0000006400000065/118?meas_event_latest=10&meas_event_full=true
   axios.get(config.nifiUrl_ws+"/last_meas_event/"+meas_loc_path, {
     crossdomain:true
@@ -350,11 +396,18 @@ router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', fu
     })
 });
 
-router.get('/digest_prediction/:digest_prefix([0-9A-Z]+)/:digest_suffix([0-9]+)', function(req, res, next){
-  var digest_prefix = req.params.digest_prefix;
-  var digest_suffix = req.params.digest_suffix;
+router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', function(req, res, next){
+  var site_id = req.params.site_id;
+  var segment_id = req.params.segment_id;
 
-  var digest_id = digest_prefix +"/"+ digest_suffix;
+  var prediction_path = site_id +"/"+ segment_id;
+
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != prediction_path){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
 
   axios.get(config.nifiUrl_old+"/digest_prediction?id="+digest_id, {
       crossdomain:true
