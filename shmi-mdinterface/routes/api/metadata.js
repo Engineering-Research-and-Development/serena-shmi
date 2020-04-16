@@ -5,6 +5,8 @@ const cjson = require('circular-json');
 const config = require("../../config");
 
 router.get('/enterprises', function(req, res, next){
+  var enterprise_id = req.params.enterprise_id;
+
   if(req.header('BrowserEnterprise') == null){
     return res.json({
       error: "401",
