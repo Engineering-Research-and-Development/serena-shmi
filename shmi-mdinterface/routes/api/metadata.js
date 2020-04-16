@@ -5,8 +5,6 @@ const cjson = require('circular-json');
 const config = require("../../config");
 
 router.get('/enterprises', function(req, res, next){
-  var enterprise_id = req.params.enterprise_id;
-
   if(req.header('BrowserEnterprise') == null){
     return res.json({
       error: "401",
@@ -14,7 +12,7 @@ router.get('/enterprises', function(req, res, next){
     })
   }
 
-  axios.get("http://127.0.0.1:"+config.port+"/api/1.0/enterprise/"+enterprise_id, {
+  axios.get(config.metadataServiceUrl+"/enterprise/"+req.header('BrowserEnterprise'), {
       crossdomain:true
     })
     .then(response => {
@@ -22,10 +20,23 @@ router.get('/enterprises', function(req, res, next){
     })
     .catch(error => {
       console.log(error);
+      return res.json({
+        error: "404",
+        message: "Enterprise not found"
+      })
     })
 });
 
 router.get('/enterprise/:enterprise_id', function(req, res, next){
+  var enterprise_id = req.params.enterprise_id;
+
+  if(req.header('BrowserEnterprise') == null || req.header('BrowserEnterprise') != enterprise_id){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
   axios.get(config.nifiUrl+"/enterprise/"+req.params.enterprise_id, {
       crossdomain:true
     })
