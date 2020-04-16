@@ -123,8 +123,7 @@ export default {
     fetchData: function(resource) {
       this.loading = true;
       //let fetch_url = this.$config.localMetadataApiUrl + resource;
-      let fetch_url =
-        this.$config.serenaDigestPredictionUrl + "/" + resource;
+      let fetch_url = this.$config.serenaDigestPredictionUrl + "/" + resource;
       //console.log(fetch_url);
       return new Promise((resolve, reject) => {
         this.$http
@@ -162,7 +161,11 @@ export default {
         //with serenaDigestPredictionUrl
         this.SerenaResourceAddressFromURL(this.card_id)
       ).then((result) => {
-        this.UpdateRul(result.prediction[0]);
+        if (result.error == null) {
+          this.UpdateRul(result.prediction[0]);
+        } else {
+          this.makeToast("danger", "Error:" + result.error, result.message);
+        }
       });
     },
     UpdateRul(pred) {

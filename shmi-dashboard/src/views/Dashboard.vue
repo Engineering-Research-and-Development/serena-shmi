@@ -109,7 +109,7 @@
                                   :type="child_2.type"
                                   v-on:click.prevent="ShowChildren(child_2)"
                                 >
-                                  <i :class="['nav-icon',child_2.icon]"></i>
+                                  <i :class="['nav-icon', child_2.icon]"></i>
                                   {{ child_2.name }}
                                 </a>
                               </SidebarNavItem>
@@ -339,6 +339,9 @@ export default {
       });
     },
     fetchData: function(resource) {
+      /*
+        test
+      */
       this.loading = true;
       //console.log(resource);
       let fetch_url = this.$config.localMetadataApiUrl + "/" + resource;
@@ -369,8 +372,10 @@ export default {
       return -1;
     },
     GetEnterprises() {
-      this.fetchData("enterprises").then(result => {
-        result.enterprises.forEach(enterprise => {
+      this.fetchData("enterprises").then((result) => {
+        if (result.error == null) {
+          //result.enterprises.forEach((enterprise) => {
+          var enterprise = result;
           if (
             enterprise.name != "MIMOSA" ||
             enterprise["@id"] != "serena:enterprise/0"
@@ -385,74 +390,89 @@ export default {
             };
             this.nav_dropdown_items.push(obj);
           }
-        });
-        this.ShowDashboardCards(this.nav_dropdown_items);
+          //});
+          this.ShowDashboardCards(this.nav_dropdown_items);
+        } else {
+          this.makeToast("danger", "Error:" + result.error, result.message);
+        }
       });
     },
     GetSites(enterprise, index) {
       this.fetchData(enterprise.url).then((result) => {
-        result.sites.forEach((site) => {
-          if (this.ChildExists(enterprise.children, site["@id"]) == -1) {
-            var obj = {
-              id: site["@id"],
-              name: site.name,
-              url: this.LocalNifiResourceAddressFromURL(site["@id"]),
-              type: "site",
-              icon: "fa fa-map-pin",
-              enterprise_index: index,
-              children: [],
-            };
-            enterprise.children.push(obj);
-          }
-        });
-        this.ShowDashboardCards(enterprise.children);
+        if (result.error == null) {
+          result.sites.forEach((site) => {
+            if (this.ChildExists(enterprise.children, site["@id"]) == -1) {
+              var obj = {
+                id: site["@id"],
+                name: site.name,
+                url: this.LocalNifiResourceAddressFromURL(site["@id"]),
+                type: "site",
+                icon: "fa fa-map-pin",
+                enterprise_index: index,
+                children: [],
+              };
+              enterprise.children.push(obj);
+            }
+          });
+          this.ShowDashboardCards(enterprise.children);
+        } else {
+          this.makeToast("danger", "Error:" + result.error, result.message);
+        }
       });
     },
     GetSegments(site, index) {
       this.fetchData(site.url).then((result) => {
-        result.segments.forEach((segment) => {
-          if (this.ChildExists(site.children, segment["@id"]) == -1) {
-            var obj = {
-              id: segment["@id"],
-              name: segment.name,
-              url: this.LocalNifiResourceAddressFromURL(segment["@id"]),
-              type: "segment",
-              icon: "fa fa-gears",
-              enterprise_index: site.enterprise_index,
-              site_index: index,
-              visualization_link: this.visualization_links[segment.name]
-                ? this.visualization_links[segment.name]
-                : "",
-              children: [],
-            };
-            //console.log(obj);
-            site.children.push(obj);
-          }
-        });
-        this.ShowDashboardCards(site.children);
+        if (result.error == null) {
+          result.segments.forEach((segment) => {
+            if (this.ChildExists(site.children, segment["@id"]) == -1) {
+              var obj = {
+                id: segment["@id"],
+                name: segment.name,
+                url: this.LocalNifiResourceAddressFromURL(segment["@id"]),
+                type: "segment",
+                icon: "fa fa-gears",
+                enterprise_index: site.enterprise_index,
+                site_index: index,
+                visualization_link: this.visualization_links[segment.name]
+                  ? this.visualization_links[segment.name]
+                  : "",
+                children: [],
+              };
+              //console.log(obj);
+              site.children.push(obj);
+            }
+          });
+          this.ShowDashboardCards(site.children);
+        } else {
+          this.makeToast("danger", "Error:" + result.error, result.message);
+        }
       });
     },
     GetAssets(segment, index) {
       //alert(segment.url);
       this.fetchData(segment.url).then((result) => {
-        result.assets.forEach((asset) => {
-          if (this.ChildExists(segment.children, asset["@id"]) == -1) {
-            var obj = {
-              id: asset["@id"],
-              name: asset.name,
-              url: this.LocalNifiResourceAddressFromURL(asset["@id"]),
-              type: "asset",
-              icon: "fa fa-gear",
-              enterprise_index: segment.enterprise_index,
-              site_index: segment.site_index,
-              segment_index: index,
-              children: [],
-            };
-            segment.children.push(obj);
-            console.log(obj);
-          }
-        });
-        this.ShowDashboardCards(segment.children);
+        if (result.error == null) {
+          result.assets.forEach((asset) => {
+            if (this.ChildExists(segment.children, asset["@id"]) == -1) {
+              var obj = {
+                id: asset["@id"],
+                name: asset.name,
+                url: this.LocalNifiResourceAddressFromURL(asset["@id"]),
+                type: "asset",
+                icon: "fa fa-gear",
+                enterprise_index: segment.enterprise_index,
+                site_index: segment.site_index,
+                segment_index: index,
+                children: [],
+              };
+              segment.children.push(obj);
+              console.log(obj);
+            }
+          });
+          this.ShowDashboardCards(segment.children);
+        } else {
+          this.makeToast("danger", "Error:" + result.error, result.message);
+        }
       });
     },
     GetMeasLocations(asset, index) {
@@ -461,23 +481,27 @@ export default {
       //alert(segment.url);
       this.fetchData(asset.url).then((result) => {
         //console.log(JSON.stringify(result));
-        result.meas_locations.forEach((meas) => {
-          if (this.ChildExists(asset.children, meas["@id"]) == -1) {
-            var obj = {
-              id: meas["@id"],
-              name: meas.name,
-              url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
-              type: "meas_location",
-              icon: "cui-chart",
-              enterprise_index: asset.enterprise_index,
-              site_index: asset.site_index,
-              segment_index: asset.segment_index,
-              asset_index: index,
-            };
-            asset.children.push(obj);
-          }
-        });
-        this.ShowDashboardCards(asset.children);
+        if (result.error == null) {
+          result.meas_locations.forEach((meas) => {
+            if (this.ChildExists(asset.children, meas["@id"]) == -1) {
+              var obj = {
+                id: meas["@id"],
+                name: meas.name,
+                url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
+                type: "meas_location",
+                icon: "cui-chart",
+                enterprise_index: asset.enterprise_index,
+                site_index: asset.site_index,
+                segment_index: asset.segment_index,
+                asset_index: index,
+              };
+              asset.children.push(obj);
+            }
+          });
+          this.ShowDashboardCards(asset.children);
+        } else {
+          this.makeToast("danger", "Error:" + result.error, result.message);
+        }
       });
     },
     GetAsHypEvents(asset, asset_index) {
@@ -640,7 +664,7 @@ export default {
         });
       } else if (this.dashboard_card_elements[0].type == "meas_location") {
         this.dashboard_card_elements.forEach((element) => {
-        console.log({element});
+          console.log({ element });
           /*this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
             .then((result) => {
               console.log(result);
