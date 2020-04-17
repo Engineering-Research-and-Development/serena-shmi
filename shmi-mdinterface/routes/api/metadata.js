@@ -358,10 +358,12 @@ router.get('/asset/:site_id([0-9A-Z]+)/:asset_id([0-9]+)', function(req, res, ne
 //     })
 // });
 
-router.get('/meas_location/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)/:meas_loc_n([0-9]|10)', function(req, res, next){
+router.get('/meas_location/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', function(req, res, next){
   var meas_loc_site = req.params.meas_loc_site;
   var meas_loc_id = req.params.meas_loc_id;
-  var meas_loc_n = req.params.meas_loc_n;
+
+  var meas_event_latest = req.query.meas_event_latest;
+  var meas_event_full = req.query.meas_event_full;
 
   var meas_loc_path = meas_loc_site +"/"+ meas_loc_id;
 
@@ -373,15 +375,39 @@ router.get('/meas_location/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)/:meas_
   }
 
   //http://serena:9093/serena/1.0/meas_location/0000006400000065/118?meas_event_latest=2&meas_event_full=true
-  axios.get(config.metadataServiceUrl+"/meas_location/"+meas_loc_path+"?meas_event_latest="+meas_loc_n+"&meas_event_full=true", {
+  axios.get(config.metadataServiceUrl+"/meas_location/"+meas_loc_path+"?meas_event_latest="+meas_event_latest+"&meas_event_full="+meas_event_full, {
     crossdomain:true
     })
     .then(response => {
-      return res.json(response.data.meas_events);
+      return res.json(response.data);
     })
     .catch(error => {
       console.log(error);
     })
+});
+
+
+router.get('/meas_locations', function(req, res, next){
+  var meas_loc_site = req.query.meas_loc_site;
+  var mloc_calc_type = req.query.mloc_calc_type;
+
+  if(req.header('BrowserSite') == null || req.header('BrowserSite') != meas_loc_site){
+    return res.json({
+      error: "401",
+      message: "You lack of proper privileges to access this resource on SHMI"
+    })
+  }
+
+  //http://serena:9009/serena/1.0/meas_locations?meas_loc_site=0000012C0000012D&mloc_calc_type=0000000000000000/6/11 
+  axios.get(config.metadataServiceUrl+"/meas_locations?meas_loc_site="+meas_loc_site+"&mloc_calc_type="+mloc_calc_type, {
+  crossdomain:true
+  })
+  .then(response => {
+    return res.json(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  })
 });
 
 router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', function(req, res, next){
@@ -397,12 +423,12 @@ router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', fu
     })
   }
 
-  //http://serena:9093/last_meas_event/0000006400000065/118?meas_event_latest=10&meas_event_full=true
+  //http://serena:9093/last_meas_event/0000006400000065/118
   axios.get(config.nifiUrl_ws+"/last_meas_event/"+meas_loc_path, {
     crossdomain:true
     })
     .then(response => {
-      return res.json(response.data.meas_events);
+      return res.json(response.data.meas_events[0]);
     })
     .catch(error => {
       console.log(error);
