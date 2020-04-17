@@ -7,12 +7,12 @@ const utilities = {
       //console.log(url);
       return new Promise((resolve, reject) => {
         this.$http
-          .get(url, {
+          .get(url /*, {
             headers: {
               BrowserEnterprise: 100,
               BrowserSite: "0000006400000065",
             },
-          })
+          }*/)
           .then((response) => {
             // JSON responses are automatically parsed.
             //console.log(JSON.stringify(response.data));
