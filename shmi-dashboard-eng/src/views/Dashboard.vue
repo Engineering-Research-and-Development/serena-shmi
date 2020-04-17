@@ -458,7 +458,7 @@ export default {
                   children: [],
                 };
                 segment.children.push(obj);
-                console.log(obj);
+                //console.log(obj);
               }
             });
             this.ShowDashboardCards(segment.children);
@@ -557,7 +557,7 @@ export default {
           name: element.name,
           url: element.url,
           type: element.type,
-          visualization_link: element.visualization_link,
+          visualization_link: element.visualization_link
         });
       });
       this.dashboard_card_elements = tmp;

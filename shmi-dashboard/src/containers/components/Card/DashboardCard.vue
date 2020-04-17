@@ -54,8 +54,11 @@
 </template>
 
 <script>
+import { utilities } from "@/mixins/utilities";
+
 export default {
   name: "DashboardCard",
+  mixins: [utilities],
   props: {
     card_id: {
       type: String,
@@ -120,25 +123,6 @@ export default {
     };
   },
   methods: {
-    fetchData: function(resource) {
-      this.loading = true;
-      //let fetch_url = this.$config.localMetadataApiUrl + resource;
-      let fetch_url = this.$config.serenaDigestPredictionUrl + "/" + resource;
-      //console.log(fetch_url);
-      return new Promise((resolve, reject) => {
-        this.$http
-          .get(fetch_url)
-          .then((response) => {
-            // JSON responses are automatically parsed.
-            //console.log(JSON.stringify(response.data));
-            //this.enterprises = response.data.enterprises;
-            resolve(response.data);
-          })
-          .catch(function(e) {
-            reject(console.log(e));
-          });
-      });
-    },
     ImageClicked() {
       var response = {
         id: this.card_id,
@@ -155,17 +139,22 @@ export default {
       this.$emit("infoClicked", response);
     },
     RulStatus() {
+      console.log(this.SerenaResourceAddressFromURL(this.card_id));
       this.fetchData(
         //with localMetadataApiUrl
         //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
         //with serenaDigestPredictionUrl
-        this.SerenaResourceAddressFromURL(this.card_id)
+        this.$config.serenaDigestPredictionUrl +
+          "/" +
+          this.SerenaResourceAddressFromURL(this.card_id)
       ).then((result) => {
         if (result.error == null) {
           this.UpdateRul(result.prediction[0]);
         } else {
           this.makeToast("danger", "Error:" + result.error, result.message);
         }
+      }).catch((e)=>{
+        this.makeToast("danger", "Error", e.message)
       });
     },
     UpdateRul(pred) {
@@ -193,14 +182,17 @@ export default {
       }
     },
   },
-  created() {
+  beforeUpdate() {
     this.arrayPredictions = new Array();
-    if (this.card_type == this.prediction_type) {
-      this.RulStatus();
-    }
+      if (this.card_type == this.prediction_type) {
+        //console.log("Evaluating: " + this.card_id);
+        this.RulStatus(this.card_id);
+      }
+  },
+  created() {
     this.interval = setInterval(() => {
       if (this.card_type == this.prediction_type) {
-        this.RulStatus();
+        this.RulStatus(this.card_id);
       }
     }, this.polling_interval);
   },
