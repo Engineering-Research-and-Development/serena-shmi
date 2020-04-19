@@ -14,7 +14,7 @@
           this.card_type.localeCompare(this.prediction_type) != 0 ? false : true
         "
       >
-        <div
+        <!--<div
           class="circle_status mr-2"
           style="display: inline-block;vertical-align:middle;"
           :style="{ background: this.label_color }"
@@ -24,7 +24,21 @@
           class="text-muted"
           style="display:inline-block;vertical-align:middle; margin-right:10px;"
           >RUL: {{ this.prediction.rul }} days</span
-        >
+        >-->
+        <h4>{{ this.pred_title }}</h4>
+        <div
+          class="circle_status mr-2"
+          style="display: inline-block;vertical-align:middle;"
+          :style="{ background: this.label_color }"
+        ></div>
+        <span
+          style="display:inline-block;vertical-align:middle; margin-right:10px;"
+          >{{ this.prediction.p_label }}</span
+        ><span style="font-size:50%;">{{ this.prediction.p_label_unit }}</span>
+        <div :v-if="this.prediction.id" class="text-muted">
+          <span>RUL: {{ this.prediction.rul }}</span
+          ><span style="font-size:50%;">{{ this.prediction.rul_unit }}</span>
+        </div>
       </template>
       <div class="float-right">
         <b-button
@@ -109,11 +123,14 @@ export default {
         warning: "yellow",
         alarm: "red",
       },
+      pred_tytle: "Prediction",
       prediction: {
         id: "",
         ts: "",
         label: -1,
+        label_unit: "",
         rul: -1,
+        rul_unit: "",
       },
       interval: null,
       prediction_type: "asset",
@@ -136,7 +153,7 @@ export default {
     InfoBtnClicked() {
       var response = {
         id: this.card_id,
-        title: this.card_title,
+        title: this.pred_tytle,
         predictions: this.arrayPredictions,
       };
       this.$emit("infoClicked", response);
@@ -160,10 +177,13 @@ export default {
             var labels_array = this.InitLabelStatus();
             for (var i = 0; i < rulArray.length; i++) {
               var prediction = {
+                type: labels_array[i].meas_loc_type.name,
                 id: labels_array[i]["@id"],
                 p_label: labels_array[i].data_value,
+                p_label_unit: labels_array[i].eng_unit_type.name,
                 ts: labels_array[i].gmt_event,
-                RUL: rulArray.data_value,
+                RUL: rulArray[i].data_value,
+                RUL_unit: rulArray[i].eng_unit_type.name,
               };
               this.UpdateRul(prediction);
             }
@@ -257,11 +277,14 @@ export default {
     },
     UpdateRul(pred) {
       console.log(JSON.stringify(pred));
-      this.label_color = this.ColorLabel(pred.p_label);
-      this.prediction.id = pred["@id"];
-      this.prediction.ts = pred.TS;
+      (this.pred_title = pred.type),
+        (this.label_color = this.ColorLabel(pred.p_label));
+      this.prediction.id = pred.id;
+      this.prediction.ts = pred.ts;
       this.prediction.label = pred.p_label;
+      this.prediction.label_unit = pred.p_label_unit;
       this.prediction.rul = pred.RUL;
+      this.prediction.rul_unit = pred.RUL_unit;
       this.arrayPredictions.push(this.prediction);
       //console.log(JSON.stringify(this.prediction));
     },
