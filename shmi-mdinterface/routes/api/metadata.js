@@ -12,7 +12,7 @@ router.get('/enterprises', function(req, res, next){
     })
   }
 
-  axios.get(config.metadataServiceUrl+"/enterprise/"+req.header('BrowserEnterprise'), {
+  axios.get(config.nifiUrl+"/enterprise/"+req.header('BrowserEnterprise'), {
       crossdomain:true
     })
     .then(response => {
@@ -435,6 +435,7 @@ router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', fu
     })
 });
 
+/*
 router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', function(req, res, next){
   var site_id = req.params.site_id;
   var segment_id = req.params.segment_id;
@@ -458,6 +459,6 @@ router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', functio
       console.log(error);
     })
 });
-
+*/
 
 module.exports = router;
