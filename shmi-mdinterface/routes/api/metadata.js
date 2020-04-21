@@ -12,7 +12,7 @@ router.get('/enterprises', function(req, res, next){
     })
   }
 
-  axios.get(config.metadataServiceUrl+"/enterprise/"+req.header('BrowserEnterprise'), {
+  axios.get(config.nifiUrl+"/enterprise/"+req.header('BrowserEnterprise'), {
       crossdomain:true
     })
     .then(response => {
@@ -375,7 +375,7 @@ router.get('/meas_location/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', func
   }
 
   //http://serena:9093/serena/1.0/meas_location/0000006400000065/118?meas_event_latest=2&meas_event_full=true
-  axios.get(config.metadataServiceUrl+"/meas_location/"+meas_loc_path+"?meas_event_latest="+meas_event_latest+"&meas_event_full="+meas_event_full, {
+  axios.get(config.nifiUrl+"/meas_location/"+meas_loc_path+"?meas_event_latest="+meas_event_latest+"&meas_event_full="+meas_event_full, {
     crossdomain:true
     })
     .then(response => {
@@ -399,7 +399,7 @@ router.get('/meas_locations', function(req, res, next){
   }
 
   //http://serena:9009/serena/1.0/meas_locations?meas_loc_site=0000012C0000012D&mloc_calc_type=0000000000000000/6/11 
-  axios.get(config.metadataServiceUrl+"/meas_locations?meas_loc_site="+meas_loc_site+"&mloc_calc_type="+mloc_calc_type, {
+  axios.get(config.nifiUrl+"/meas_locations?meas_loc_site="+meas_loc_site+"&mloc_calc_type="+mloc_calc_type, {
   crossdomain:true
   })
   .then(response => {
@@ -435,6 +435,7 @@ router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', fu
     })
 });
 
+/*
 router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', function(req, res, next){
   var site_id = req.params.site_id;
   var segment_id = req.params.segment_id;
@@ -458,6 +459,6 @@ router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', functio
       console.log(error);
     })
 });
-
+*/
 
 module.exports = router;
