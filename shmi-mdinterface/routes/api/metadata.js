@@ -428,37 +428,12 @@ router.get('/last_meas_event/:meas_loc_site([0-9A-Z]+)/:meas_loc_id([0-9]+)', fu
     crossdomain:true
     })
     .then(response => {
-      return res.json(response.data.meas_events[0]);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-});
-
-/*
-router.get('/digest_prediction/:site_id([0-9A-Z]+)/:segment_id([0-9]+)', function(req, res, next){
-  var site_id = req.params.site_id;
-  var segment_id = req.params.segment_id;
-
-  var prediction_path = site_id +"/"+ segment_id;
-
-  if(req.header('BrowserSite') == null || req.header('BrowserSite') != site_id){
-    return res.json({
-      error: "401",
-      message: "You lack of proper privileges to access this resource on SHMI"
-    })
-  }
-
-  axios.get(config.nifiUrl_old+"/digest_prediction?id="+prediction_path, {
-      crossdomain:true
-    })
-    .then(response => {
       return res.json(response.data);
     })
     .catch(error => {
       console.log(error);
     })
 });
-*/
+
 
 module.exports = router;
