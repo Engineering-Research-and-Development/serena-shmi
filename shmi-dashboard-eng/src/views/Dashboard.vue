@@ -276,13 +276,8 @@ export default {
         asset: "img/illustrations/svg/noun_bicycle_chain.svg",
         meas_location: "img/illustrations/svg/noun_meas_locations.svg",
       },
-      visualization_links: {
-        //Vanno poi inseriti nel config
-        "Punching Tool":
-          "http://serena:9008/SynAreaDashboard/pages/use-case/kone/visualization/combi/index.html",
-        RobotBox:
-          "http://serena:9008/SynAreaDashboard/pages/use-case/comau/visualization/robotbox/index.html",
-      },
+      visualization_links: this.$config.visualization_links,
+      training_links: this.$config.training_links,
       dashboard_table_type_fields: {
         Enterprise: [
           //{ key: "status", sortable: false },
@@ -420,6 +415,9 @@ export default {
                   site_index: index,
                   visualization_link: this.visualization_links[segment.name]
                     ? this.visualization_links[segment.name]
+                    : "",
+                  training_link: this.training_links[segment.name]
+                    ? this.training_links[segment.name]
                     : "",
                   children: [],
                 };

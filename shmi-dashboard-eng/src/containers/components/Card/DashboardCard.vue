@@ -63,6 +63,20 @@
           </span>
         </div>
       </template>
+      <template v-if="this.card_training_link ? true : false">
+        <div class="my-2">
+          <span class="d-block">
+            <a
+              class="font-weight-bold"
+              :href="card_training_link"
+              target="_blank"
+            >
+              <i class="fa fa-cube fa-fw"></i>
+              3D maintenance
+            </a>
+          </span>
+        </div>
+      </template>
     </div>
   </b-card>
 </template>
@@ -114,6 +128,10 @@ export default {
       type: String,
       default: "",
     },
+    card_training_lonk:{
+      type: String,
+      default: "",
+    }
   },
   data() {
     return {
