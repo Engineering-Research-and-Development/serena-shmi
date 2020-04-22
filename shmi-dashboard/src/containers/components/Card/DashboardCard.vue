@@ -128,10 +128,10 @@ export default {
       type: String,
       default: "",
     },
-    card_training_lonk:{
+    card_training_link: {
       type: String,
       default: "",
-    }
+    },
   },
   data() {
     return {
@@ -154,6 +154,7 @@ export default {
       prediction_type: "asset",
       polling_interval: "50000",
       label_color: "blue",
+      pred_title: "Prediction",
       arrayPredictions: null,
       site_id: -1,
       label_id: -1,
@@ -171,12 +172,24 @@ export default {
     InfoBtnClicked() {
       var response = {
         id: this.card_id,
-        title: this.pred_tytle,
+        title: this.pred_title,
         predictions: this.arrayPredictions,
       };
+      console.log(response);
       this.$emit("infoClicked", response);
     },
-    InitRulStatus() {
+    InitRulStatus(n) {
+      /*console.log(
+        "Init fetching: " +
+          this.$config.localMetadataApiUrl +
+          "/meas_location/" +
+          this.site_id +
+          "/" +
+          this.rul_id +
+          "?meas_event_latest=" +
+          n +
+          "&meas_event_full=true"
+      );*/
       this.fetchData(
         //with localMetadataApiUrl
         //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
@@ -186,25 +199,14 @@ export default {
           this.site_id +
           "/" +
           this.rul_id +
-          "?meas_event_latest=10&meas_event_full=true"
+          "?meas_event_latest=" +
+          n +
+          "&meas_event_full=true"
       )
         .then((result) => {
-          console.log(result);
           if (result.error == null) {
-            var rulArray = result.meas_events;
-            var labels_array = this.InitLabelStatus();
-            for (var i = 0; i < rulArray.length; i++) {
-              var prediction = {
-                type: labels_array[i].meas_loc_type.name,
-                id: labels_array[i]["@id"],
-                p_label: labels_array[i].data_value,
-                p_label_unit: labels_array[i].eng_unit_type.name,
-                ts: labels_array[i].gmt_event,
-                RUL: rulArray[i].data_value,
-                RUL_unit: rulArray[i].eng_unit_type.name,
-              };
-              this.UpdateRul(prediction);
-            }
+            if(result.asset["@id"] == this.card_id)
+              this.InitLabelStatus(n, result.meas_events);
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -213,38 +215,9 @@ export default {
           this.makeToast("danger", "Error", e.message);
         });
     },
-    LatestRulStatus() {
-      this.fetchData(
-        //with localMetadataApiUrl
-        //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
-        //with serenaDigestPredictionUrl
-        this.$config.localMetadataApiUrl +
-          "/last_meas_event/" +
-          this.site_id +
-          "/" +
-          this.rul_id
-      )
-        .then((result) => {
-          console.log(result);
-          if (result.error == null) {
-            var rul = result;
-            var label = this.LatestLabelStatus();
-            var prediction = {
-              id: label["@id"],
-              p_label: label.data_value,
-              ts: label.gmt_event,
-              RUL: rul.data_value,
-            };
-            this.UpdateRul(prediction);
-          } else {
-            this.makeToast("danger", "Error:" + result.error, result.message);
-          }
-        })
-        .catch((e) => {
-          this.makeToast("danger", "Error", e.message);
-        });
-    },
-    InitLabelStatus() {
+    InitLabelStatus(n, rulArray) {
+      //console.log(n + " RUL --->");
+      //console.log(rulArray);
       this.fetchData(
         //with localMetadataApiUrl
         //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
@@ -257,33 +230,32 @@ export default {
           "?meas_event_latest=10&meas_event_full=true"
       )
         .then((result) => {
-          console.log(result);
           if (result.error == null) {
-            return result.meas_events;
-          } else {
-            this.makeToast("danger", "Error:" + result.error, result.message);
-          }
-        })
-        .catch((e) => {
-          this.makeToast("danger", "Error", e.message);
-        });
-      return null;
-    },
-    LatestLabelStatus() {
-      this.fetchData(
-        //with localMetadataApiUrl
-        //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
-        //with serenaDigestPredictionUrl
-        this.$config.localMetadataApiUrl +
-          "/last_meas_event/" +
-          this.site_id +
-          "/" +
-          this.label_id
-      )
-        .then((result) => {
-          console.log(result);
-          if (result.error == null) {
-            return result;
+            //console.log(result);
+            for (var i=0; i < rulArray.length; i++) {
+              if (i < result.meas_events.length) {
+                //console.log(i);
+                var prediction = {
+                  type: result.meas_events[i].meas_loc_type.name
+                    ? result.meas_events[i].meas_loc_type.name
+                    : "undefined",
+                  id: rulArray[i]["@id"],
+                  p_label: result.meas_events[i].data_value
+                    ? result.meas_events[i].data_value
+                    : -1,
+                  p_label_unit: result.meas_events[i].eng_unit_type.name
+                    ? result.meas_events[i].eng_unit_type.name
+                    : "",
+                  ts: result.meas_events[i].gmt_event,
+                  RUL: rulArray[i].data_value ? rulArray[i].data_value : -1,
+                  RUL_unit: rulArray[i].eng_unit_type.name
+                    ? rulArray[i].eng_unit_type.name
+                    : "",
+                };
+                if(prediction.p_label != -1 && prediction.RUL != -1)
+                  this.UpdateRul(prediction);
+              }
+            }
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -294,9 +266,9 @@ export default {
       return null;
     },
     UpdateRul(pred) {
-      console.log(JSON.stringify(pred));
-      (this.pred_title = pred.type),
-        (this.label_color = this.ColorLabel(pred.p_label));
+      //console.log("PREDICTION: --- " + JSON.stringify(pred));
+      this.pred_title = pred.type;
+      this.label_color = this.ColorLabel(pred.p_label);
       this.prediction.id = pred.id;
       this.prediction.ts = pred.ts;
       this.prediction.label = pred.p_label;
@@ -358,7 +330,7 @@ export default {
               result.meas_locations[0]["@id"]
             ).split("/")[1];
             //console.log(this.rul_id);
-            this.InitRulStatus(this.card_id);
+            this.InitRulStatus(10);
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -372,7 +344,11 @@ export default {
         "/"
       )[0];
       this.arrayPredictions = new Array();
-      this.GetLabelID();
+      if (this.label_id == -1 || this.rul_id == -1) {
+        this.GetLabelID();
+      } else {
+        this.InitRulStatus(10);
+      }
     },
     ColorLabel(label) {
       switch (label) {
@@ -390,26 +366,19 @@ export default {
     },
   },
   created() {
-    if (this.card_type == this.prediction_type) {
-      if (this.site_id == -1 || this.label_id == -1 || this.rul_id == -1) {
-        this.Init();
-      } else {
-        this.interval = setInterval(() => {
-          if (this.card_type == this.prediction_type) {
-            this.LatestRulStatus(this.card_id);
-          }
-        }, this.polling_interval);
+    this.interval = setInterval(() => {
+      if (this.card_type == this.prediction_type) {
+        if (this.site_id == -1 || this.label_id == -1 || this.rul_id == -1) {
+          //console.log("init");
+          this.Init();
+        }
       }
-    }
-  },
-  beforeUpdate() {
-    if (this.card_type == this.prediction_type) {
-      if (this.site_id == -1 || this.label_id == -1 || this.rul_id == -1) {
-        this.Init();
-      } else {
-        this.InitRulStatus(this.card_id);
+    }, 3000);
+    this.interval = setInterval(() => {
+      if (this.card_type == this.prediction_type) {
+        this.InitRulStatus(1);
       }
-    }
+    }, this.polling_interval);
   },
   beforeDestroy() {
     clearInterval(this.interval);

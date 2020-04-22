@@ -16,7 +16,7 @@
           card_title="Scheduler"
           card_body_text="Link to LMS Scheduler Service"
           card_button_text="Scheduler"
-          card_button_link="/scheduler"
+          :card_button_link="lms_scheduler"
         ></ServiceCard>
         <ServiceCard
           card_img_path="img/illustrations/svg/undraw_server_status_5pbv.svg"
@@ -24,15 +24,16 @@
           card_title="Metadata service"
           card_body_text="Link to Dell Metadata Manager component"
           card_button_text="Metadata Manager"
-          card_button_link="http://serena:9008/metadata-manager/"
-        ></ServiceCard><!-- Indirizzo mdmanager -->
+          :card_button_link="md_manager"
+        ></ServiceCard
+        ><!-- Indirizzo mdmanager -->
         <ServiceCard
           card_img_path="img/illustrations/svg/undraw_safe_bnk7.svg"
           card_image_alt="Card image cap"
           card_title="RPCA Manager"
           card_body_text="Link to ENG RPCA Manager component"
           card_button_text="RPCA Manager"
-          card_button_link="/rpca_manager"
+          :card_button_link="rpca_manager"
         ></ServiceCard>
         <ServiceCard
           card_img_path="img/illustrations/svg/undraw_predictive_analytics_kf9n.svg"
@@ -40,23 +41,15 @@
           card_title="Predictive model"
           card_body_text="Link to Polito predictive model evaluation charts visualization component"
           card_button_text="Predictive model evaluation"
-          card_button_link="/polito_charts"
+          :card_button_link="polito_charts"
         ></ServiceCard>
         <ServiceCard
           card_img_path="img/illustrations/svg/undraw_QA_engineers_dg5p.svg"
           card_image_alt="Card image cap"
-          card_title="Augmented maintenance"
-          card_body_text="Link to Oculavis augmented maintenance component"
-          card_button_text="Augmented maintenance"
-          card_button_link="/augmented_maintenance"
-        ></ServiceCard>
-        <ServiceCard
-          card_img_path="img/illustrations/svg/undraw_posting_photo.svg"
-          card_image_alt="Card image cap"
-          card_title="Virtual Maintenance"
-          card_body_text="Link to SynArea virtual Maintenance component"
-          card_button_text="Virtual Maintenance"
-          card_button_link="/virtual_maintenance"
+          card_title="Gateway manager"
+          card_body_text="Link to gateway manager, in order to associate segments and gateways"
+          card_button_text="Gateway manager"
+          :card_button_link="gw_manager"
         ></ServiceCard>
       </b-card-group>
     </div>
@@ -64,14 +57,45 @@
 </template>
 
 <script>
-import ServiceCard from '@/containers/components/Card/ServiceCard'
-
+import ServiceCard from "@/containers/components/Card/ServiceCard";
+import Config from "../../../config";
 export default {
-  name: 'services-home',
+  name: "services-home",
   components: {
-    ServiceCard
-  }
-}
+    ServiceCard,
+  },
+  props: {
+    lms_scheduler: {
+      type: String,
+      default: Config.lmsScheduler,
+    },
+    rpca_manager: {
+      type: String,
+      default: Config.rpcaManager,
+    },
+    polito_charts: {
+      type: String,
+      default: Config.politoCharts,
+    },
+    gw_manager: {
+      type: String,
+      default: Config.gatewayManager,
+    },
+    md_manager: {
+      type: String,
+      default: Config.metadataManager,
+    },
+  },
+  data() {
+    return {
+      /*lms_scheduler: Config.lmsScheduler,
+      rpca_manager: this.$$config.rpcaManager,
+      polito_charts: Config.politoCharts,
+      gw_manager: Config.gatewayManager,
+      md_manager: Config.metadataManager,*/
+    };
+  },
+};
 </script>
 
 <style scoped>
