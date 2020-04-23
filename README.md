@@ -51,7 +51,7 @@ VUE_APP_WEB_SERVER_PROTOCOL=PLACEHOLDER_PROTOCOL_SHMI_WEBSERVER_PLACEHOLDER
 VUE_APP_WEB_SERVER_HOST=PLACEHOLDER_IP_ADDRESS_SHMI_WEBSERVER_PLACEHOLDER
 VUE_APP_WEB_SERVER_PORT=PLACEHOLDER_PORT_SHMI_WEBSERVER_PLACEHOLDER
 ```
-- _{PLACEHOLDER_PROTOCOL_SHMI_WEBSERVER_PLACEHOLDER} must be replaced with the protocol you're going to use to forward requests from shmi-dashboard to shmi-webserver, thus, "http" or "https"
+- _{PLACEHOLDER_PROTOCOL_SHMI_WEBSERVER_PLACEHOLDER} must be replaced with the protocol you're going to use to forward requests from shmi-dashboard to shmi-webserver, thus, "http" or "https"_
 - _{PLACEHOLDER_IP_ADDRESS_SHMI_WEBSERVER_PLACEHOLDER} must be replaced with ip address of the server hosting shmi_webserver_
 - _{PLACEHOLDER_PORT_SHMI_WEBSERVER_PLACEHOLDER} must be replaced with port of the server hosting shmi_webserver_
 
