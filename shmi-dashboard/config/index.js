@@ -3,11 +3,8 @@ module.exports = {
   localMetadataApiUrl:
     process.env.NODE_ENV === "production"
       ? 
-        process.env.VUE_APP_WEB_SERVER_PROTOCOL +
-        "://" +
-        process.env.VUE_APP_WEB_SERVER_HOST +
-        ":" +
-        process.env.VUE_APP_WEB_SERVER_PORT +
+        process.env.VUE_APP_SHMI_WEB_SERVER_URL 
+        +
         "/api/metadata/api/1.0"
       : 
         "http://localhost:9090/api/metadata/api/1.0"
@@ -16,11 +13,8 @@ module.exports = {
   serenaPredictionUrl:
     process.env.NODE_ENV === "production"
       ? 
-        process.env.VUE_APP_WEB_SERVER_PROTOCOL +
-        "://" +
-        process.env.VUE_APP_WEB_SERVER_HOST +
-        ":" +
-        process.env.VUE_APP_WEB_SERVER_PORT +
+      process.env.VUE_APP_SHMI_WEB_SERVER_URL 
+      +
         "/api/metadata/api/1.0/meas_location"
       : 
         "http://localhost:9090/api/metadata/api/1.0/meas_location"
@@ -31,19 +25,13 @@ module.exports = {
     ?
       {
         "Punching Tool":
-          process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-          "://" +
-          process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-          ":" +
-          process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+          process.env.VUE_APP_SYN_WEB_SERVER_URL 
+          +
           "/syn-vis/pages/use-case/kone/visualization/combi/index.html",
 
         "RobotBox":
-          process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-          "://" +
-          process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-          ":" +
-          process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+          process.env.VUE_APP_SYN_WEB_SERVER_URL 
+          +
           "/syn-vis/pages/use-case/comau/visualization/robotbox/index.html"
       }
     :
@@ -60,19 +48,13 @@ module.exports = {
     ?
       {
         "Punching Tool":
-          process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-          "://" +
-          process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-          ":" +
-          process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+          process.env.VUE_APP_SYN_WEB_SERVER_URL 
+          +
           "/syn-vis/pages/use-case/kone/maintenance/combi/index.html",
 
         "RobotBox":
-          process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-          "://" +
-          process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-          ":" +
-          process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+          process.env.VUE_APP_SYN_WEB_SERVER_URL 
+          +
           "/syn-vis/pages/use-case/comau/maintenance/belt/index.html"
       }
     :
@@ -87,11 +69,8 @@ module.exports = {
   metadataManager: 
     process.env.NODE_ENV === "production" 
     ?
-      process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-      "://" +
-      process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-      ":" +
-      process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+      process.env.VUE_APP_SYN_WEB_SERVER_URL 
+      +
       "/syn-vis/pages/md-manager"
     :
       "http://serena:9008/syn-vis/pages/md-manager"
@@ -100,11 +79,8 @@ module.exports = {
   gatewayManager: 
     process.env.NODE_ENV === "production" 
     ?
-      process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-      "://" +
-      process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-      ":" +
-      process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+      process.env.VUE_APP_SYN_WEB_SERVER_URL 
+      +
       "/syn-vis/pages/gw-manager"
     :
       "http://serena:9008/syn-vis/pages/gw-manager"
@@ -113,11 +89,8 @@ module.exports = {
   politoCharts: 
     process.env.NODE_ENV === "production" 
     ?
-      process.env.VUE_APP_SYN_WEB_SERVER_PROTOCOL +
-      "://" +
-      process.env.VUE_APP_SYN_WEB_SERVER_HOST +
-      ":" +
-      process.env.VUE_APP_SYN_WEB_SERVER_PORT +
+      process.env.VUE_APP_SYN_WEB_SERVER_URL 
+      +
       "/syn-vis/pages/charts/silhouette/index.html"
     :
       "http://serena:9008/syn-vis/pages/charts/silhouette/index.html"
