@@ -479,23 +479,25 @@ export default {
           this.loading = false;
           //console.log(JSON.stringify(result));
           if (result.error == null) {
-            result.meas_locations.forEach((meas) => {
-              if (this.ChildExists(asset.children, meas["@id"]) == -1) {
-                var obj = {
-                  id: meas["@id"],
-                  name: meas.name,
-                  url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
-                  type: "meas_location",
-                  icon: "cui-chart",
-                  enterprise_index: asset.enterprise_index,
-                  site_index: asset.site_index,
-                  segment_index: asset.segment_index,
-                  asset_index: index,
-                };
-                asset.children.push(obj);
-              }
-            });
-            this.ShowDashboardCards(asset.children);
+            if (result.meas_locations != null) {
+              result.meas_locations.forEach((meas) => {
+                if (this.ChildExists(asset.children, meas["@id"]) == -1) {
+                  var obj = {
+                    id: meas["@id"],
+                    name: meas.name,
+                    url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
+                    type: "meas_location",
+                    icon: "cui-chart",
+                    enterprise_index: asset.enterprise_index,
+                    site_index: asset.site_index,
+                    segment_index: asset.segment_index,
+                    asset_index: index,
+                  };
+                  asset.children.push(obj);
+                }
+              });
+              this.ShowDashboardCards(asset.children);
+            }
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -555,7 +557,7 @@ export default {
           name: element.name,
           url: element.url,
           type: element.type,
-          visualization_link: element.visualization_link
+          visualization_link: element.visualization_link,
         });
       });
       this.dashboard_card_elements = tmp;
@@ -759,10 +761,12 @@ export default {
         case "Asset":
           children = [];
           var as_hyp_events = [];
-          for (i = 0; i < item.as_hyp_events.length; i++)
-            as_hyp_events.push(item.as_hyp_events[i].name);
-          for (i = 0; i < item.meas_locations.length; i++)
-            children.push(item.meas_locations[i].name);
+          if (item.as_hyp_events != null)
+            for (i = 0; i < item.as_hyp_events.length; i++)
+              as_hyp_events.push(item.as_hyp_events[i].name);
+          if (item.meas_locations != null)
+            for (i = 0; i < item.meas_locations.length; i++)
+              children.push(item.meas_locations[i].name);
           tmp = {
             "@id": item["@id"],
             "@type": item["@type"],

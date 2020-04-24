@@ -34,10 +34,10 @@
         <span
           style="display:inline-block;vertical-align:middle; margin-right:10px;"
           >{{ this.prediction.p_label }}</span
-        ><span style="font-size:50%;">{{ this.prediction.p_label_unit }}</span>
+        ><span style="font-size:75%;">{{ this.prediction.p_label_unit }}</span>
         <div :v-if="this.prediction.id" class="text-muted">
           <span>RUL: {{ this.prediction.rul }}</span
-          ><span style="font-size:50%;">{{ this.prediction.rul_unit }}</span>
+          ><span style="font-size:75%;">{{ this.prediction.rul_unit }}</span>
         </div>
       </template>
       <div class="float-right">
@@ -151,6 +151,7 @@ export default {
         rul_unit: "",
       },
       interval: null,
+      init_interval: null,
       prediction_type: "asset",
       polling_interval: "50000",
       label_color: "blue",
@@ -159,6 +160,8 @@ export default {
       site_id: -1,
       label_id: -1,
       rul_id: -1,
+      has_label: false,
+      prediction_enabled: false,
     };
   },
   methods: {
@@ -175,7 +178,7 @@ export default {
         title: this.pred_title,
         predictions: this.arrayPredictions,
       };
-      console.log(response);
+      //console.log(response);
       this.$emit("infoClicked", response);
     },
     InitRulStatus(n) {
@@ -205,8 +208,35 @@ export default {
       )
         .then((result) => {
           if (result.error == null) {
-            if(result.asset["@id"] == this.card_id)
-              this.InitLabelStatus(n, result.meas_events);
+            //console.log(result);
+            if (
+              result.asset["@id"] == this.card_id &&
+              result.meas_events != null
+            ) {
+              if (this.has_label) {
+                this.InitLabelStatus(n, result.meas_events);
+              } else {
+                for (var i = 0; i < result.meas_events.length; i++) {
+                  var prediction = {
+                    type: result.meas_events[i].meas_loc_type.name
+                      ? result.meas_events[i].meas_loc_type.name
+                      : "undefined",
+                    id: result.meas_events[i]["@id"],
+                    p_label: -1,
+                    p_label_unit: "",
+                    ts: result.meas_events[i].gmt_event,
+                    RUL: result.meas_events[i].data_value
+                      ? result.meas_events[i].data_value
+                      : -1,
+                    RUL_unit: result.eng_unit_type.name
+                      ? result.eng_unit_type.name
+                      : "",
+                  };
+                  if (prediction.p_label != -1 || prediction.RUL != -1)
+                    this.UpdateRul(prediction);
+                }
+              }
+            }
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -232,28 +262,29 @@ export default {
         .then((result) => {
           if (result.error == null) {
             //console.log(result);
-            for (var i=0; i < rulArray.length; i++) {
-              if (i < result.meas_events.length) {
-                //console.log(i);
-                var prediction = {
-                  type: result.meas_events[i].meas_loc_type.name
-                    ? result.meas_events[i].meas_loc_type.name
-                    : "undefined",
-                  id: rulArray[i]["@id"],
-                  p_label: result.meas_events[i].data_value
-                    ? result.meas_events[i].data_value
-                    : -1,
-                  p_label_unit: result.meas_events[i].eng_unit_type.name
-                    ? result.meas_events[i].eng_unit_type.name
-                    : "",
-                  ts: result.meas_events[i].gmt_event,
-                  RUL: rulArray[i].data_value ? rulArray[i].data_value : -1,
-                  RUL_unit: rulArray[i].eng_unit_type.name
-                    ? rulArray[i].eng_unit_type.name
-                    : "",
-                };
-                if(prediction.p_label != -1 && prediction.RUL != -1)
-                  this.UpdateRul(prediction);
+            if (result.meas_events != null) {
+              for (var i = 0; i < rulArray.length; i++) {
+                if (i < result.meas_events.length) {
+                  //console.log(i);
+                  var prediction = {
+                    type: result.meas_events[i].meas_loc_type.name
+                      ? result.meas_events[i].meas_loc_type.name
+                      : "undefined",
+                    id: rulArray[i]["@id"],
+                    p_label: result.meas_events[i].data_value
+                      ? result.meas_events[i].data_value
+                      : -1,
+                    p_label_unit: result.meas_events[i].eng_unit_type.name
+                      ? result.meas_events[i].eng_unit_type.name
+                      : "",
+                    ts: result.meas_events[i].gmt_event,
+                    RUL: rulArray[i].data_value ? rulArray[i].data_value : -1,
+                    RUL_unit: rulArray[i].eng_unit_type.name
+                      ? rulArray[i].eng_unit_type.name
+                      : "",
+                  };
+                  if (prediction.RUL != -1) this.UpdateRul(prediction);
+                }
               }
             }
           } else {
@@ -266,7 +297,7 @@ export default {
       return null;
     },
     UpdateRul(pred) {
-      //console.log("PREDICTION: --- " + JSON.stringify(pred));
+      //console.logconsole.log("PREDICTION: --- " + JSON.stringify(pred));
       this.pred_title = pred.type;
       this.label_color = this.ColorLabel(pred.p_label);
       this.prediction.id = pred.id;
@@ -296,10 +327,18 @@ export default {
         .then((result) => {
           //console.log(result);
           if (result.error == null) {
-            this.label_id = this.SerenaResourceAddressFromURL(
-              result.meas_locations[0]["@id"]
-            ).split("/")[1];
-            //console.log(this.label_id);
+            //console.log(result);
+            if (result.meas_locations != null) {
+              if (result.meas_locations.length > 0) {
+                this.has_label = true;
+                this.label_id = this.SerenaResourceAddressFromURL(
+                  result.meas_locations[0]["@id"]
+                ).split("/")[1];
+                //console.log(this.label_id);
+              } else {
+                this.has_label = false;
+              }
+            }
             this.GetRulID();
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
@@ -325,12 +364,20 @@ export default {
           this.$config.serenaRulMlocCalcTypeId
       )
         .then((result) => {
+          //console.log(result);
           if (result.error == null) {
-            this.rul_id = this.SerenaResourceAddressFromURL(
-              result.meas_locations[0]["@id"]
-            ).split("/")[1];
-            //console.log(this.rul_id);
-            this.InitRulStatus(10);
+            if (result.meas_locations != null) {
+              if (result.meas_locations.length > 0) {
+                this.rul_id = this.SerenaResourceAddressFromURL(
+                  result.meas_locations[0]["@id"]
+                ).split("/")[1];
+                //console.log(this.rul_id);
+                this.prediction_enabled = true;
+                this.InitRulStatus(10);
+              } else {
+                this.prediction_enabled = false;
+              }
+            }
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -338,17 +385,6 @@ export default {
         .catch((e) => {
           this.makeToast("danger", "Error", e.message);
         });
-    },
-    Init() {
-      this.site_id = this.SerenaResourceAddressFromURL(this.card_id).split(
-        "/"
-      )[0];
-      this.arrayPredictions = new Array();
-      if (this.label_id == -1 || this.rul_id == -1) {
-        this.GetLabelID();
-      } else {
-        this.InitRulStatus(10);
-      }
     },
     ColorLabel(label) {
       switch (label) {
@@ -366,19 +402,28 @@ export default {
     },
   },
   created() {
-    this.interval = setInterval(() => {
+    setTimeout(() => {
       if (this.card_type == this.prediction_type) {
-        if (this.site_id == -1 || this.label_id == -1 || this.rul_id == -1) {
-          //console.log("init");
-          this.Init();
+        //console.log("set timeout");
+        this.site_id = this.SerenaResourceAddressFromURL(this.card_id).split(
+          "/"
+        )[0];
+        this.arrayPredictions = new Array();
+        if (this.label_id == -1 || this.rul_id == -1) {
+          //console.log( this.site_id + " - " + this.label_id + " - " + this.rul_id);
+          this.GetLabelID();
         }
       }
+      this.interval = setInterval(() => {
+        if (this.card_type == this.prediction_type && this.prediction_enabled) {
+          //console.log("InitRulStatus(1)");
+          this.InitRulStatus(1);
+        } else {
+          //console.log("cleared polling");
+          clearInterval(this.interval);
+        }
+      }, this.polling_interval);
     }, 3000);
-    this.interval = setInterval(() => {
-      if (this.card_type == this.prediction_type) {
-        this.InitRulStatus(1);
-      }
-    }, this.polling_interval);
   },
   beforeDestroy() {
     clearInterval(this.interval);

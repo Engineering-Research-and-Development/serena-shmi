@@ -9,8 +9,8 @@ const utilities = {
         this.$http
           .get(url /*, {
             headers: {
-              BrowserEnterprise: 300,
-              BrowserSite: "0000012C0000012D",
+              BrowserEnterprise: 200,
+              BrowserSite: "000000C8000000C9",
             },
           }*/)
           .then((response) => {
