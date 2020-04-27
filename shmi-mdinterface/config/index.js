@@ -6,8 +6,5 @@ module.exports = {
     : "http://serena:9093/serena/1.0",
   nifiUrl_ws: process.env.NODE_ENV === 'production' 
     ? "http://"+process.env.NIFI_HOST+":"+process.env.NIFI_PORT
-    : "http://serena:9093",
-  metadataServiceUrl: process.env.NODE_ENV === 'production' 
-  ? "http://"+process.env.NIFI_HOST+":9009/serena/1.0"
-  : "http://serena:9009/serena/1.0"
+    : "http://serena:9093"
 };

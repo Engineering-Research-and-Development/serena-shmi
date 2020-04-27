@@ -71,9 +71,9 @@ module.exports = {
     ?
       process.env.VUE_APP_SYN_WEB_SERVER_URL 
       +
-      "/syn-vis/pages/md-manager"
+      "/syn-vis/pages/md-manager/"
     :
-      "http://serena:9008/syn-vis/pages/md-manager"
+      "http://serena:9008/syn-vis/pages/md-manager/"
   ,
 
   gatewayManager: 
@@ -81,9 +81,9 @@ module.exports = {
     ?
       process.env.VUE_APP_SYN_WEB_SERVER_URL 
       +
-      "/syn-vis/pages/gw-manager"
+      "/syn-vis/pages/gw-manager/"
     :
-      "http://serena:9008/syn-vis/pages/gw-manager"
+      "http://serena:9008/syn-vis/pages/gw-manager/"
   ,
 
   politoCharts: 
@@ -101,7 +101,7 @@ rpcaManager:
     ?
       process.env.VUE_APP_RPCA_MANAGER_URL
     :
-      "http://serena:9008"
+      "#"
 ,
 
 lmsScheduler: 
@@ -109,7 +109,7 @@ lmsScheduler:
   ?
     process.env.VUE_APP_LMS_SCHEDULER_URL
   :
-    "http://serena:9008"
+    "#"
 ,
 
 serenaLabelMlocCalcTypeId: "0000000000000000/6/10",
