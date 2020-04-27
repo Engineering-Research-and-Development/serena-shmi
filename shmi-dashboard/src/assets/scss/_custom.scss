@@ -1,1 +1,25 @@
 // Here you can add other styles
+
+.nav-dropdown-toggle {
+    position: relative;
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      right: $sidebar-nav-link-padding-x;
+      display: block;
+      width: 12px !important;
+      height: 12px !important;
+      padding: 0;
+      margin-top: -4px;
+      content: "";
+      background-image: $sidebar-nav-dropdown-indicator;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: transform .3s;
+    }
+
+    .badge {
+      margin-right: 16px;
+    }
+  }

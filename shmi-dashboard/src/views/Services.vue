@@ -5,15 +5,25 @@
         <img src="img/logo-1400.jpg" width="80%" alt="Serena Project Logo" />
       </div>
       <ServicesHome></ServicesHome>
-      <b-row class="mt-4">
+      <b-row class="mt-4 ml-2">
+        <a
+          href="https://serena-project.eu/"
+          exact
+          class="nav-link"
+          active-class="active"
+          target="_blank"
+          >SERENA portal</a
+        >
         <a
           href="http://vana.mech.upatras.gr/redmine/projects/serena/wiki/Wiki"
           exact
           class="nav-link"
           active-class="active"
-        >SERENA wiki</a>
-        <router-link to="/user/login" exact class="nav-link" active-class="active">Login</router-link>
-        <router-link to="/user/register" exact class="nav-link" active-class="active">Register</router-link>
+          target="_blank"
+          >SERENA wiki</a
+        >
+        <!--<router-link to="/user/login" exact class="nav-link" active-class="active">Login</router-link>
+        <router-link to="/user/register" exact class="nav-link" active-class="active">Register</router-link>-->
       </b-row>
     </div>
   </div>
@@ -21,32 +31,29 @@
 
 <script>
 //import Cards from './base/Cards'
-import ServicesHome from './services/ServicesHome'
+import ServicesHome from "./services/ServicesHome";
 
 export default {
-  name: 'services',
+  name: "services",
   components: {
     //Cards
-    ServicesHome
+    ServicesHome,
   },
-  data: function () {
-
-    return {
-    }
+  data: function() {
+    return {};
   },
-  methods: {
-
-  },
+  methods: {},
   computed: {
     name() {
-      return this.$route.name
+      return this.$route.name;
     },
     list() {
-      return this.$route.matched.filter((route) => route.name || route.meta.label)
-    }
-  }
-}
+      return this.$route.matched.filter(
+        (route) => route.name || route.meta.label
+      );
+    },
+  },
+};
 </script>
 
-<style>
-</style>
+<style></style>

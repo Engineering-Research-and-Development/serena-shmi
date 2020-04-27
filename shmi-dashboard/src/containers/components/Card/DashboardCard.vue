@@ -9,11 +9,7 @@
     />
     <div class="card-body p-0">
       <b-card-text>{{ card_body_text }}</b-card-text>
-      <template
-        v-if="
-          this.card_type.localeCompare(this.prediction_type) != 0 ? false : true
-        "
-      >
+      <template v-if="this.prediction_enabled">
         <!--<div
           class="circle_status mr-2"
           style="display: inline-block;vertical-align:middle;"
@@ -43,7 +39,7 @@
       <div class="float-right">
         <b-button
           pill
-          v-if="card_button_link"
+          v-if="prediction_enabled"
           variant="outline-dark"
           v-on:click="InfoBtnClicked"
           >{{ card_button_text }}</b-button
@@ -227,7 +223,7 @@ export default {
                     ts: result.meas_events[i].gmt_event,
                     RUL: result.meas_events[i].data_value
                       ? result.meas_events[i].data_value
-                      : -1,
+                      : "unavailable",
                     RUL_unit: result.eng_unit_type.name
                       ? result.eng_unit_type.name
                       : "",
@@ -278,7 +274,7 @@ export default {
                       ? result.meas_events[i].eng_unit_type.name
                       : "",
                     ts: result.meas_events[i].gmt_event,
-                    RUL: rulArray[i].data_value ? rulArray[i].data_value : -1,
+                    RUL: rulArray[i].data_value ? rulArray[i].data_value : "unavailable",
                     RUL_unit: rulArray[i].eng_unit_type.name
                       ? rulArray[i].eng_unit_type.name
                       : "",
@@ -377,6 +373,8 @@ export default {
               } else {
                 this.prediction_enabled = false;
               }
+            }else{
+              this.prediction_enabled = false;
             }
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
@@ -413,6 +411,8 @@ export default {
           //console.log( this.site_id + " - " + this.label_id + " - " + this.rul_id);
           this.GetLabelID();
         }
+      } else {
+        this.prediction_enabled = false;
       }
       this.interval = setInterval(() => {
         if (this.card_type == this.prediction_type && this.prediction_enabled) {

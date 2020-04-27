@@ -91,9 +91,9 @@ module.exports = {
     ?
       process.env.VUE_APP_SYN_WEB_SERVER_URL 
       +
-      "/syn-vis/pages/charts/silhouette/index.html"
+      "/syn-vis/pages/charts/index.html"
     :
-      "http://serena:9008/syn-vis/pages/charts/silhouette/index.html"
+      "http://serena:9008/syn-vis/pages/charts/index.html"
 ,
         
 rpcaManager: 

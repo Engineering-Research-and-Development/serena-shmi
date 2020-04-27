@@ -25,19 +25,19 @@
       <b-nav-item class="px-3" to="#">{{title}}</b-nav-item>
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto">
-      <DefaultHeaderDropdownAccnt />
+      <!--<DefaultHeaderDropdownAccnt />-->
     </b-navbar-nav>
   </AppHeader>
 </template>
 <script>
 import { Header as AppHeader, SidebarToggler } from '@coreui/vue'
-import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
+//import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
 
 export default {
   name: 'DefaultHeader',
   components: {
     AppHeader,
-    DefaultHeaderDropdownAccnt,
+    //DefaultHeaderDropdownAccnt,
     SidebarToggler
   },
   props: {

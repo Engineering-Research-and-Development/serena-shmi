@@ -1,5 +1,5 @@
 <template>
-  <b-card class="shadow border-0" sm="12" md="4" lg="3">
+  <b-card class="shadow border-0 h-100">
     <img
       :v-if="card_img_path"
       class="card-img-top img-fluid w-100 px-2"
@@ -12,10 +12,11 @@
       <p :v-if="card_text_muted" class="card-text">
         <small class="text-muted">{{card_text_muted}}</small>
       </p>
-      <div class="float-right">
+      <div class="mt-auto">
         <a
           v-if="card_button_link"
           :href="card_button_link"
+          target="_blank"
           class="btn btn-outline-primary"
         >{{card_button_text}}</a>
       </div>
