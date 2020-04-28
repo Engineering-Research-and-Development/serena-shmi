@@ -4,7 +4,7 @@
       <div class="card border-0 shadow my-4">
         <img src="img/logo-1400.jpg" width="80%" alt="Serena Project Logo" />
       </div>
-      <ServicesHome></ServicesHome>
+      <ServicesHome ref="servicesHome"></ServicesHome>
       <b-row class="mt-4 ml-2">
         <a
           href="https://serena-project.eu/"
@@ -21,6 +21,11 @@
           active-class="active"
           target="_blank"
           >SERENA wiki</a
+        >
+        <Button
+          class="btn btn-link"
+          @click="ToggleAdminTools()"
+          >Admin tools</Button
         >
         <!--<router-link to="/user/login" exact class="nav-link" active-class="active">Login</router-link>
         <router-link to="/user/register" exact class="nav-link" active-class="active">Register</router-link>-->
@@ -40,9 +45,18 @@ export default {
     ServicesHome,
   },
   data: function() {
-    return {};
+    return {
+      enable : false
+    };
   },
-  methods: {},
+  methods: {
+    ToggleAdminTools(){
+      console.log(this.enable);
+      this.enable = !this.enable;
+      this.$refs.servicesHome.Enable(this.enable);
+      return;
+    }
+  },
   computed: {
     name() {
       return this.$route.name;
@@ -51,7 +65,7 @@ export default {
       return this.$route.matched.filter(
         (route) => route.name || route.meta.label
       );
-    },
+    }
   },
 };
 </script>
