@@ -96,23 +96,47 @@ module.exports = {
       "http://serena:9008/syn-vis/pages/charts/index.html"
 ,
         
-rpcaManager: 
+  rpcaManager: 
+      process.env.NODE_ENV === "production" 
+      ?
+        process.env.VUE_APP_RPCA_MANAGER_URL
+      :
+        "#"
+  ,
+
+  lmsScheduler: 
     process.env.NODE_ENV === "production" 
     ?
-      process.env.VUE_APP_RPCA_MANAGER_URL
+      process.env.VUE_APP_LMS_SCHEDULER_URL
     :
       "#"
-,
+  ,
 
-lmsScheduler: 
-  process.env.NODE_ENV === "production" 
-  ?
-    process.env.VUE_APP_LMS_SCHEDULER_URL
-  :
-    "#"
-,
+  hadoopMonitor: 
+    process.env.NODE_ENV === "production" 
+    ?
+      process.env.VUE_APP_HADOOP_MONITOR_URL
+    :
+      "#"
+  ,
 
-serenaLabelMlocCalcTypeId: "0000000000000000/6/10",
-serenaRulMlocCalcTypeId: "0000000000000000/6/11"
+  hueService: 
+    process.env.NODE_ENV === "production" 
+    ?
+      process.env.VUE_APP_HUE_URL
+    :
+      "#"
+  ,
+
+  nifiService: 
+    process.env.NODE_ENV === "production" 
+    ?
+      process.env.VUE_APP_NIFI_URL
+    :
+      "#"
+  ,
+
+  serenaLabelMlocCalcTypeId: "0000000000000000/6/10",
+  serenaRulMlocCalcTypeId: "0000000000000000/6/11"
 
 };
