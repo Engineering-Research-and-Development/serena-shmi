@@ -4,25 +4,20 @@ const utilities = {
       Test: on build remove headers
     */
     fetchData(url) {
-      //console.log(url);
       return new Promise((resolve, reject) => {
         this.$http
           .get(
-            url /*, {
+            url /*{
             headers: {
-              BrowserEnterprise: 100,
-              BrowserSite: "0000006400000065",
+              BrowserEnterprise: 300,
+              BrowserSite: "0000012C0000012D",
             },
           }*/
           )
           .then((response) => {
-            // JSON responses are automatically parsed.
-            //console.log(JSON.stringify(response.data));
-            //this.enterprises = response.data.enterprises;
             resolve(response.data);
           })
           .catch((e) => {
-            //console.log(JSON.stringify(e));
             reject(e);
           });
       });
@@ -33,6 +28,9 @@ const utilities = {
         variant: variant,
         solid: true,
       });
+    },
+    containsKey(obj, key) {
+      return Object.keys(obj).includes(key);
     },
   },
 };

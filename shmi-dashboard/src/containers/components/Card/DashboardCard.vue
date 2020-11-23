@@ -9,42 +9,35 @@
     />
     <div class="card-body p-0">
       <b-card-text>{{ card_body_text }}</b-card-text>
-      <template v-if="this.prediction_enabled">
-        <!--<div
-          class="circle_status mr-2"
-          style="display: inline-block;vertical-align:middle;"
-          :style="{ background: this.label_color }"
-        ></div>
-        <span
-          :v-if="this.prediction.id"
-          class="text-muted"
-          style="display:inline-block;vertical-align:middle; margin-right:10px;"
-          >RUL: {{ this.prediction.rul }} days</span
-        >-->
+      <template
+        v-if="this.prediction_enabled && this.card_type == this.prediction_type"
+      >
         <h4>{{ this.pred_title }}</h4>
         <div
           class="circle_status mr-2"
           style="display: inline-block;vertical-align:middle;"
           :style="{ background: this.label_color }"
         ></div>
-        <span
-          style="display:inline-block;vertical-align:middle; margin-right:10px;"
-          >{{ this.prediction.p_label }}</span
+        <span style="display:inline-block;vertical-align:middle;">{{
+          this.prediction.p_label
+        }}</span
         ><span style="font-size:75%;">{{ this.prediction.p_label_unit }}</span>
         <div :v-if="this.prediction.id" class="text-muted">
           <span>RUL: {{ this.prediction.rul }}</span
-          ><span style="font-size:75%;">{{ this.prediction.rul_unit }}</span>
+          ><span style="font-size:75%; margin-left:5px;">{{
+            this.prediction.rul_unit
+          }}</span>
+        </div>
+        <div class="float-right">
+          <b-button
+            pill
+            v-if="prediction_enabled"
+            variant="outline-dark"
+            v-on:click="InfoBtnClicked"
+            >{{ card_button_text }}</b-button
+          >
         </div>
       </template>
-      <div class="float-right">
-        <b-button
-          pill
-          v-if="prediction_enabled"
-          variant="outline-dark"
-          v-on:click="InfoBtnClicked"
-          >{{ card_button_text }}</b-button
-        >
-      </div>
       <template v-if="this.card_visualization_link ? true : false">
         <div class="my-2">
           <span class="d-block">
@@ -131,6 +124,7 @@ export default {
   },
   data() {
     return {
+      prediction_type: "asset",
       colors: {
         neutro: "lightgray",
         good: "lightgreen",
@@ -146,18 +140,18 @@ export default {
         rul: -1,
         rul_unit: "",
       },
+      prediction_enabled: false,
       interval: null,
       init_interval: null,
-      prediction_type: "asset",
-      polling_interval: "50000",
+      polling_interval: "60000",
       label_color: "blue",
       pred_title: "Prediction",
+      //pred_title: this.card_title,
       arrayPredictions: null,
       site_id: -1,
       label_id: -1,
       rul_id: -1,
       has_label: false,
-      prediction_enabled: false,
     };
   },
   methods: {
@@ -174,25 +168,10 @@ export default {
         title: this.pred_title,
         predictions: this.arrayPredictions,
       };
-      //console.log(response);
       this.$emit("infoClicked", response);
     },
     InitRulStatus(n) {
-      /*console.log(
-        "Init fetching: " +
-          this.$config.localMetadataApiUrl +
-          "/meas_location/" +
-          this.site_id +
-          "/" +
-          this.rul_id +
-          "?meas_event_latest=" +
-          n +
-          "&meas_event_full=true"
-      );*/
       this.fetchData(
-        //with localMetadataApiUrl
-        //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
-        //with serenaDigestPredictionUrl
         this.$config.localMetadataApiUrl +
           "/meas_location/" +
           this.site_id +
@@ -204,11 +183,11 @@ export default {
       )
         .then((result) => {
           if (result.error == null) {
-            //console.log(result);
             if (
               result.asset["@id"] == this.card_id &&
               result.meas_events != null
             ) {
+              this.prediction_enabled = true;
               if (this.has_label) {
                 this.InitLabelStatus(n, result.meas_events);
               } else {
@@ -221,15 +200,16 @@ export default {
                     p_label: -1,
                     p_label_unit: "",
                     ts: result.meas_events[i].gmt_event,
-                    RUL: result.meas_events[i].data_value
+                    RUL: this.containsKey(result.meas_events[i], "data_value")
                       ? result.meas_events[i].data_value
                       : "unavailable",
                     RUL_unit: result.eng_unit_type.name
                       ? result.eng_unit_type.name
                       : "",
                   };
-                  if (prediction.p_label != -1 || prediction.RUL != -1)
+                  if (prediction.p_label != -1 || prediction.RUL != -1) {
                     this.UpdateRul(prediction);
+                  }
                 }
               }
             }
@@ -242,12 +222,7 @@ export default {
         });
     },
     InitLabelStatus(n, rulArray) {
-      //console.log(n + " RUL --->");
-      //console.log(rulArray);
       this.fetchData(
-        //with localMetadataApiUrl
-        //"/digest/" + this.SerenaResourceAddressFromURL(this.card_id)
-        //with serenaDigestPredictionUrl
         this.$config.localMetadataApiUrl +
           "/meas_location/" +
           this.site_id +
@@ -257,11 +232,9 @@ export default {
       )
         .then((result) => {
           if (result.error == null) {
-            //console.log(result);
             if (result.meas_events != null) {
               for (var i = 0; i < rulArray.length; i++) {
                 if (i < result.meas_events.length) {
-                  //console.log(i);
                   var prediction = {
                     type: result.meas_events[i].meas_loc_type.name
                       ? result.meas_events[i].meas_loc_type.name
@@ -274,7 +247,9 @@ export default {
                       ? result.meas_events[i].eng_unit_type.name
                       : "",
                     ts: result.meas_events[i].gmt_event,
-                    RUL: rulArray[i].data_value ? rulArray[i].data_value : "unavailable",
+                    RUL: this.containsKey(rulArray[i], "data_value")
+                      ? rulArray[i].data_value
+                      : "unavailable",
                     RUL_unit: rulArray[i].eng_unit_type.name
                       ? rulArray[i].eng_unit_type.name
                       : "",
@@ -293,7 +268,6 @@ export default {
       return null;
     },
     UpdateRul(pred) {
-      //console.logconsole.log("PREDICTION: --- " + JSON.stringify(pred));
       this.pred_title = pred.type;
       this.label_color = this.ColorLabel(pred.p_label);
       this.prediction.id = pred.id;
@@ -303,16 +277,8 @@ export default {
       this.prediction.rul = pred.RUL;
       this.prediction.rul_unit = pred.RUL_unit;
       this.arrayPredictions.push(this.prediction);
-      //console.log(JSON.stringify(this.prediction));
     },
     GetLabelID() {
-      /*console.log(
-        this.$config.localMetadataApiUrl +
-          "/meas_locations?meas_loc_site=" +
-          this.site_id +
-          "&mloc_calc_type=" +
-          this.$config.serenaLabelMlocCalcTypeId
-      );*/
       this.fetchData(
         this.$config.localMetadataApiUrl +
           "/meas_locations?meas_loc_site=" +
@@ -321,21 +287,18 @@ export default {
           this.$config.serenaLabelMlocCalcTypeId
       )
         .then((result) => {
-          //console.log(result);
           if (result.error == null) {
-            //console.log(result);
             if (result.meas_locations != null) {
               if (result.meas_locations.length > 0) {
                 this.has_label = true;
                 this.label_id = this.SerenaResourceAddressFromURL(
                   result.meas_locations[0]["@id"]
                 ).split("/")[1];
-                //console.log(this.label_id);
               } else {
                 this.has_label = false;
               }
+              this.GetRulID();
             }
-            this.GetRulID();
           } else {
             this.makeToast("danger", "Error:" + result.error, result.message);
           }
@@ -345,13 +308,6 @@ export default {
         });
     },
     GetRulID() {
-      /*console.log(
-        this.$config.localMetadataApiUrl +
-          "/meas_locations?meas_loc_site=" +
-          this.site_id +
-          "&mloc_calc_type=" +
-          this.$config.serenaRulMlocCalcTypeId
-      );*/
       this.fetchData(
         this.$config.localMetadataApiUrl +
           "/meas_locations?meas_loc_site=" +
@@ -360,20 +316,27 @@ export default {
           this.$config.serenaRulMlocCalcTypeId
       )
         .then((result) => {
-          //console.log(result);
           if (result.error == null) {
             if (result.meas_locations != null) {
               if (result.meas_locations.length > 0) {
                 this.rul_id = this.SerenaResourceAddressFromURL(
                   result.meas_locations[0]["@id"]
                 ).split("/")[1];
-                //console.log(this.rul_id);
-                this.prediction_enabled = true;
                 this.InitRulStatus(10);
+                this.interval = setInterval(() => {
+                  if (
+                    this.card_type == this.prediction_type &&
+                    this.prediction_enabled
+                  ) {
+                    this.InitRulStatus(1);
+                  } else {
+                    clearInterval(this.interval);
+                  }
+                }, this.polling_interval);
               } else {
                 this.prediction_enabled = false;
               }
-            }else{
+            } else {
               this.prediction_enabled = false;
             }
           } else {
@@ -402,28 +365,20 @@ export default {
   created() {
     setTimeout(() => {
       if (this.card_type == this.prediction_type) {
-        //console.log("set timeout");
         this.site_id = this.SerenaResourceAddressFromURL(this.card_id).split(
           "/"
         )[0];
         this.arrayPredictions = new Array();
-        if (this.label_id == -1 || this.rul_id == -1) {
-          //console.log( this.site_id + " - " + this.label_id + " - " + this.rul_id);
+        if (
+          this.card_type == this.prediction_type &&
+          (this.label_id == -1 || this.rul_id == -1)
+        ) {
           this.GetLabelID();
         }
       } else {
         this.prediction_enabled = false;
       }
-      this.interval = setInterval(() => {
-        if (this.card_type == this.prediction_type && this.prediction_enabled) {
-          //console.log("InitRulStatus(1)");
-          this.InitRulStatus(1);
-        } else {
-          //console.log("cleared polling");
-          clearInterval(this.interval);
-        }
-      }, this.polling_interval);
-    }, 3000);
+    }, 1000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
@@ -439,8 +394,5 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 2px;
-  /* Usage:
-    <div class="circle_green" v-bind:style="{ background: status_color}"></div>
-  */
 }
 </style>

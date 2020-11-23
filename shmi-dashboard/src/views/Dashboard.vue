@@ -1,6 +1,5 @@
 <template>
   <div class="app-body" style="overflow:hidden">
-    <!--<DefaultSidebar :nav_data="nav" :dropdown_data="sidebarnav_dropdown_data" />-->
     <Sidebar>
       <nav class="sidebar-nav">
         <VuePerfectScrollbar
@@ -19,28 +18,12 @@
                 @click="alert('cucu')"
               />
             </SidebarNavItem>
-            <!--<SidebarNavItem>
-              <SidebarNavLink
-                :navLinkItem="{name: 'Dashboard',url: '/dashboard',icon: 'cui-speedometer'}"
-                :badge="null"
-                :variant="null"
-                :attributes="null"
-              />
-            </SidebarNavItem>-->
             <SidebarNavDivider classes="null" />
             <SidebarNavTitle
               name="enterprises"
               :classes="null"
               :wrapper="null"
             />
-            <!--
-            <SidebarNavLabel
-              :name="''"
-              :url="''"
-              :icon="''"
-              :label="''"
-              :classes="''"
-            />-->
             <template
               v-for="(nav_dropdown_item,
               nav_dropdown_item_index) in nav_dropdown_items"
@@ -67,36 +50,6 @@
                             @dropDownClicked="GetChildren"
                             @itemClicked="ShowChildren"
                           >
-                            <!-- 3rd level depth DropDown -->
-                            <!--<template
-                              v-for="(child_2, child_2_index) in child.children"
-                            >
-                              <template>
-                                <SidebarNavDropdown
-                                  :key="child_2_index"
-                                  :dropDownItem="child_2"
-                                  @dropDownClicked="GetChildren"
-                                  @itemClicked="ShowChildren"
-                                >
-                                  <li
-                                    :key="child_3_index"
-                                    class="nav-item"
-                                    v-for="(child_3,
-                                    child_3_index) in child_2.children"
-                                  >
-                                    <SidebarNavLink
-                                      :navLinkItem="child_3"
-                                      :badge="child_3.badge"
-                                      :variant="child_3.variant"
-                                      :attributes="child_3.attributes"
-                                    />
-                                  </li>
-                                </SidebarNavDropdown>
-                              </template>
-                            </template>-->
-                            <!-- 3rd Level depth Dropdown -->
-                            <!-- OR -->
-                            <!-- 3rd Level depth NavLink -->
                             <li
                               :key="child_2_index"
                               class="nav-item"
@@ -114,7 +67,6 @@
                                 </a>
                               </SidebarNavItem>
                             </li>
-                            <!-- 3rd Level depth NavLink -->
                           </SidebarNavDropdown>
                         </template>
                       </template>
@@ -126,7 +78,6 @@
           </ul>
         </VuePerfectScrollbar>
       </nav>
-      <!--<SidebarMinimizer />-->
     </Sidebar>
     <main class="main">
       <Breadcrumb class="mb-0" :list="list" />
@@ -219,13 +170,10 @@
 import sidebar_data from "@/sidebar_data";
 import Breadcrumb from "@/containers/components/Breadcrumb/Breadcrumb";
 import Sidebar from "@/containers/components/Sidebar/Sidebar";
-//import SidebarMinimizer from '@/containers/components/Sidebar/SidebarMinimizer'
 import SidebarNavDivider from "@/containers/components/Sidebar/SidebarNavDivider";
 import SidebarNavLink from "@/containers/components/Sidebar/SidebarNavLink";
 import SidebarNavItem from "@/containers/components/Sidebar/SidebarNavItem";
 import SidebarNavTitle from "@/containers/components/Sidebar/SidebarNavTitle";
-//import SidebarNavLabel from "@/containers/components/Sidebar/SidebarNavLabel";
-//import SidebarNavDropDownGroup from '@/containers/components/Sidebar/SidebarNavDropDownGroup'
 import SidebarNavDropdown from "@/containers/components/Sidebar/SidebarNavDropdown";
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import DashboardCard from "@/containers/components/Card/DashboardCard";
@@ -239,14 +187,11 @@ export default {
   components: {
     Breadcrumb,
     Sidebar,
-    //SidebarMinimizer,
     SidebarNavDivider,
     SidebarNavLink,
     SidebarNavTitle,
     SidebarNavItem,
-    //SidebarNavLabel,
     VuePerfectScrollbar,
-    //SidebarNavDropDownGroup,
     DashboardCard,
     SidebarNavDropdown,
     dTable,
@@ -255,8 +200,6 @@ export default {
   data: function() {
     return {
       nav: sidebar_data.items,
-      //enterprises_url: process.env.VUE_APP_SERENA_API_URL + 'enterprises',
-      //enterprises_url: this.$config.localMetadataApiUrl + '/enterprises',
       nav_dropdown_items: [],
       loading: false,
       dashboard_card_elements: [],
@@ -280,7 +223,6 @@ export default {
       training_links: this.$config.training_links,
       dashboard_table_type_fields: {
         Enterprise: [
-          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -289,7 +231,6 @@ export default {
           { key: "sites", sortable: false },
         ],
         Site: [
-          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -299,7 +240,6 @@ export default {
           { key: "segments", sortable: false },
         ],
         Segment: [
-          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -310,7 +250,6 @@ export default {
           { key: "assets", sortable: false },
         ],
         Asset: [
-          //{ key: "status", sortable: false },
           { key: "@id", sortable: true },
           { key: "name", sortable: true },
           { key: "@type", sortable: true },
@@ -404,25 +343,26 @@ export default {
           this.loading = false;
           if (result.error == null) {
             result.segments.forEach((segment) => {
-              if (this.ChildExists(site.children, segment["@id"]) == -1) {
-                var obj = {
-                  id: segment["@id"],
-                  name: segment.name,
-                  url: this.LocalNifiResourceAddressFromURL(segment["@id"]),
-                  type: "segment",
-                  icon: "fa fa-gears",
-                  enterprise_index: site.enterprise_index,
-                  site_index: index,
-                  visualization_link: this.visualization_links[segment.name]
-                    ? this.visualization_links[segment.name]
-                    : "",
-                  training_link: this.training_links[segment.name]
-                    ? this.training_links[segment.name]
-                    : "",
-                  children: [],
-                };
-                //console.log(obj);
-                site.children.push(obj);
+              if (!segment.name.includes("SERENA")) {
+                if (this.ChildExists(site.children, segment["@id"]) == -1) {
+                  var obj = {
+                    id: segment["@id"],
+                    name: segment.name,
+                    url: this.LocalNifiResourceAddressFromURL(segment["@id"]),
+                    type: "segment",
+                    icon: "fa fa-gears",
+                    enterprise_index: site.enterprise_index,
+                    site_index: index,
+                    visualization_link: this.visualization_links[segment.name]
+                      ? this.visualization_links[segment.name]
+                      : "",
+                    training_link: this.training_links[segment.name]
+                      ? this.training_links[segment.name]
+                      : "",
+                    children: [],
+                  };
+                  site.children.push(obj);
+                }
               }
             });
             this.ShowDashboardCards(site.children);
@@ -435,8 +375,6 @@ export default {
         });
     },
     GetAssets(segment, index) {
-      //alert(segment.url);
-
       this.loading = true;
       this.fetchData(this.$config.localMetadataApiUrl + "/" + segment.url)
         .then((result) => {
@@ -456,7 +394,6 @@ export default {
                   children: [],
                 };
                 segment.children.push(obj);
-                //console.log(obj);
               }
             });
             this.ShowDashboardCards(segment.children);
@@ -469,37 +406,32 @@ export default {
         });
     },
     GetMeasLocations(asset, index) {
-      //Load meas locations
-      //console.log(index + " --- " + JSON.stringify(asset));
-      //alert(segment.url);
-
       this.loading = true;
       this.fetchData(this.$config.localMetadataApiUrl + "/" + asset.url)
         .then((result) => {
           this.loading = false;
-          //console.log(JSON.stringify(result));
-          if (result.error == null) {
-            if (result.meas_locations != null) {
-              result.meas_locations.forEach((meas) => {
-                if (this.ChildExists(asset.children, meas["@id"]) == -1) {
-                  var obj = {
-                    id: meas["@id"],
-                    name: meas.name,
-                    url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
-                    type: "meas_location",
-                    icon: "cui-chart",
-                    enterprise_index: asset.enterprise_index,
-                    site_index: asset.site_index,
-                    segment_index: asset.segment_index,
-                    asset_index: index,
-                  };
-                  asset.children.push(obj);
-                }
-              });
-              this.ShowDashboardCards(asset.children);
-            }
-          } else {
-            this.makeToast("danger", "Error:" + result.error, result.message);
+          console.log(result);
+          if (
+            this.containsKey(result, "meas_locations") &&
+            result.meas_locations != null
+          ) {
+            result.meas_locations.forEach((meas) => {
+              if (this.ChildExists(asset.children, meas["@id"]) == -1) {
+                var obj = {
+                  id: meas["@id"],
+                  name: meas.name,
+                  url: this.LocalNifiResourceAddressFromURL(meas["@id"]),
+                  type: "meas_location",
+                  icon: "cui-chart",
+                  enterprise_index: asset.enterprise_index,
+                  site_index: asset.site_index,
+                  segment_index: asset.segment_index,
+                  asset_index: index,
+                };
+                asset.children.push(obj);
+              }
+            });
+            this.ShowDashboardCards(asset.children);
           }
         })
         .catch((e) => {
@@ -511,7 +443,6 @@ export default {
       console.log(asset_index + " --- " + JSON.stringify(asset));
     },
     GetChildren(value) {
-      //console.log(JSON.stringify(value));
       switch (value.type) {
         case "enterprise":
           var ent_index = this.nav_dropdown_items.indexOf(value);
@@ -561,7 +492,6 @@ export default {
         });
       });
       this.dashboard_card_elements = tmp;
-      //console.log(JSON.stringify(this.dashboard_card_elements));
       this.ShowTableData();
     },
     ClearDashboardCards() {
@@ -576,14 +506,9 @@ export default {
       }
     },
     CardClicked(cardInfo) {
-      console.log(JSON.stringify(cardInfo));
-      //console.log(JSON.stringify(this.dashboard_card_elements));
-      //TODO
-      //showChildren
-      //this.ShowChildren(cardInfo);
+      return cardInfo;
     },
     CardInfoClicked(response) {
-      //console.log(JSON.stringify(response));
       this.ShowChart(response);
     },
     clearChart() {
@@ -604,55 +529,53 @@ export default {
       this.chartLabels = labels;
       this.chartBG = "#20a8d8";
       this.chartBorder = "rgba(255,255,255,.55)";
-      //console.log(this.chartLabels);
       this.chartData = data;
-      //console.log(this.chartData);
     },
 
     //modal runtime creation example
-    showMsgOk(info) {
-      console.log(info);
-      const h = this.$createElement;
-      // Using HTML string
-      const titleVNode = h("div", {
-        domProps: { innerHTML: "Title from <i>HTML<i> string" },
-        class: ["bg-dark,text-light"],
-      });
-      // More complex structure
-      const messageVNode = h("div", { class: ["container", "bg-dark"] }, [
-        h("p", { class: ["text-center", "text-primary"] }, [
-          " Paragraph text: ",
-          h("strong", {}, "Strong text"),
-          " and normal text ",
-        ]),
-        h("p", { class: ["text-center"] }, [
-          h("b-spinner", {
-            class: ["bg-primary"],
-            style: [{ color: "#FFAABB" }],
-          }),
-        ]),
-        h("b-img", {
-          props: {
-            src: "https://picsum.photos/id/20/250/250",
-            thumbnail: true,
-            center: true,
-            fluid: true,
-            rounded: "circle",
-          },
-        }),
-      ]);
-      const footerVNode = h("footer", {}, [
-        "Footer text",
-        h("p", {}, "this is a footer, yeeeee"),
-      ]);
-      // We must pass the generated VNodes as arrays
-      this.$bvModal.msgBoxOk([messageVNode, footerVNode], {
-        title: [titleVNode],
-        buttonSize: "lg",
-        centered: true,
-        size: "lg",
-      });
-    },
+    //showMsgOk(info) {
+    //  //console.log(info);
+    //  const h = this.$createElement;
+    //  // Using HTML string
+    //  const titleVNode = h("div", {
+    //    domProps: { innerHTML: "Title from <i>HTML<i> string" },
+    //    class: ["bg-dark,text-light"],
+    //  });
+    //  // More complex structure
+    //  const messageVNode = h("div", { class: ["container", "bg-dark"] }, [
+    //    h("p", { class: ["text-center", "text-primary"] }, [
+    //      " Paragraph text: ",
+    //      h("strong", {}, "Strong text"),
+    //      " and normal text ",
+    //    ]),
+    //    h("p", { class: ["text-center"] }, [
+    //      h("b-spinner", {
+    //        class: ["bg-primary"],
+    //        style: [{ color: "#FFAABB" }],
+    //      }),
+    //    ]),
+    //    h("b-img", {
+    //      props: {
+    //        src: "https://picsum.photos/id/20/250/250",
+    //        thumbnail: true,
+    //        center: true,
+    //        fluid: true,
+    //        rounded: "circle",
+    //      },
+    //    }),
+    //  ]);
+    //  const footerVNode = h("footer", {}, [
+    //    "Footer text",
+    //    h("p", {}, "this is a footer, yeeeee"),
+    //  ]);
+    //  // We must pass the generated VNodes as arrays
+    //  this.$bvModal.msgBoxOk([messageVNode, footerVNode], {
+    //    title: [titleVNode],
+    //    buttonSize: "lg",
+    //    centered: true,
+    //    size: "lg",
+    //  });
+    //},
     ShowTableData() {
       var tmp = [];
       if (this.dashboard_card_elements[0].type == "asset") {
@@ -671,18 +594,17 @@ export default {
             });
         });
       } else if (this.dashboard_card_elements[0].type == "meas_location") {
-        this.dashboard_card_elements.forEach((element) => {
-          console.log({ element });
-          /*this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
+        //this.dashboard_card_elements.forEach((element) => {
+        /*this.fetchData(this.LocalNifiResourceAddressFromURL(element.id))
             .then((result) => {
-              console.log(result);
               tmp.push(this.DashboardTableElement(result));
               this.SelectTableFields(result["@type"]);
             })
             .catch((error) => {
               console.log(error);
             });*/
-        });
+        //});
+        return;
       } else {
         this.dashboard_card_elements.forEach((element) => {
           this.fetchData(
@@ -705,7 +627,6 @@ export default {
       this.dashboard_table_fields = this.dashboard_table_type_fields[type];
     },
     DashboardTableElement(item) {
-      //console.log(JSON.stringify(item));
       var tmp = "";
       var children = [];
       var i = 0;
@@ -726,8 +647,9 @@ export default {
           break;
         case "Site":
           children = [];
-          for (i = 0; i < item.segments.length; i++)
+          for (i = 0; i < item.segments.length; i++) {
             children.push(item.segments[i].name);
+          }
           tmp = {
             "@id": item["@id"],
             "@type": item["@type"],
@@ -780,7 +702,6 @@ export default {
             name: item.name,
             as_hyp_events: as_hyp_events,
             meas_locations: children,
-            //status: "Banned",
           };
           break;
       }
@@ -804,14 +725,12 @@ export default {
       }
     },*/
     scrollHandle(evt) {
-      //console.log(evt)
       return evt;
     },
   },
   created() {
     this.loading = false;
 
-    //this.fetchData('/enterprises');
     this.GetEnterprises();
   },
   computed: {
