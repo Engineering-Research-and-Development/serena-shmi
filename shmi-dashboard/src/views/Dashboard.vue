@@ -102,19 +102,45 @@
             </template>
             <b-card
               class="shadow"
-              v-if="chartData.length != 0"
+              v-if="chartData.length > 0"
               :title="chartTitle"
               :sub-title="chartId"
             >
-              <template>
-                <LineChart
-                  :height="400"
-                  :width="300"
-                  :label="chartLabel"
-                  :data="chartData"
-                  :labels="chartLabels"
-                  :borderColor="chartBorder"
-                />
+              <template v-if="rulTrendData.length > 0">
+                <b-card
+                  :title="rul_trend_chart_title"
+                  :sub-title="rul_trend_chart_subtitle"
+                >
+                  <plotly
+                    :data="rulTrendData"
+                    :layout="rulTrendLayout"
+                    :displayModeBar="false"
+                    :displaylogo="false"
+                  />
+                  <!--<template>
+                  <LineChart
+                    :height="400"
+                    :width="300"
+                    :label="chartLabel"
+                    :data="chartData"
+                    :labels="chartLabels"
+                    :borderColor="chartBorder"
+                  />
+                </template>-->
+                </b-card>
+              </template>
+              <template v-if="plotlyData.length > 0">
+                <b-card
+                  :title="meas_event_assoc_chart_title"
+                  :sub-title="meas_event_assoc_chart_subtitle"
+                >
+                  <plotly
+                    :data="plotlyData"
+                    :layout="plotlyLayout"
+                    :displayModeBar="false"
+                    :displaylogo="false"
+                  />
+                </b-card>
               </template>
               <b-button
                 class="mt-4 float-right"
@@ -178,8 +204,9 @@ import SidebarNavDropdown from "@/containers/components/Sidebar/SidebarNavDropdo
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import DashboardCard from "@/containers/components/Card/DashboardCard";
 import dTable from "@/containers/components/Base/DashboardTable";
-import LineChart from "@/containers/components/Chart/LineChart";
+//import LineChart from "@/containers/components/Chart/LineChart";
 import { utilities } from "@/mixins/utilities";
+import { Plotly } from "vue-plotly";
 
 export default {
   name: "dashboard",
@@ -195,7 +222,8 @@ export default {
     DashboardCard,
     SidebarNavDropdown,
     dTable,
-    LineChart,
+    //LineChart,
+    Plotly,
   },
   data: function() {
     return {
@@ -264,6 +292,14 @@ export default {
           { key: "meas_locations", sortable: false },
         ],
       },
+      plotlyData: [],
+      plotlyLayout: null,
+      meas_event_assoc_chart_title: "Latest prediction measurement samples",
+      meas_event_assoc_chart_subtitle: "",
+      rul_trend_chart_title: "RUL trend",
+      rul_trend_chart_subtitle: "",
+      rulTrendData:[],
+      rulTrendLayout:null,
     };
   },
   methods: {
@@ -410,7 +446,6 @@ export default {
       this.fetchData(this.$config.localMetadataApiUrl + "/" + asset.url)
         .then((result) => {
           this.loading = false;
-          console.log(result);
           if (
             this.containsKey(result, "meas_locations") &&
             result.meas_locations != null
@@ -482,6 +517,7 @@ export default {
     },
     ShowDashboardCards(array) {
       var tmp = [];
+      this.ClearDashboardCards();
       array.forEach((element) => {
         tmp.push({
           id: element.id,
@@ -515,67 +551,48 @@ export default {
       this.chartData = [];
       this.chartLabels = [];
       this.chartId = "0";
+      this.ClearPlotlyChart();
     },
     ShowChart(response) {
-      var labels = [];
-      var data = [];
+      this.rulTrendData = [];
+      this.rulTrendLayout = null;
+      console.log(response);
+      let labels = [];
+      let data = [];
+      let latest_gmt = "";
       for (var i = 0; i < response.predictions.length; i++) {
         labels.push(response.predictions[i].ts);
         data.push(response.predictions[i].rul);
+        if (i == response.predictions.length - 1)
+          latest_gmt = response.predictions[i].ts;
       }
+      this.PlotlyMeasEventAssocChart(latest_gmt, response.meas_events_assoc);
       this.chartLabel = "RUL";
       this.chartId = response.id;
-      this.chartTitle = response.title + " - RUL trend";
+      this.chartTitle = response.title;
+      this.rul_trend_chart_subtitle = "ASDF";
       this.chartLabels = labels;
       this.chartBG = "#20a8d8";
       this.chartBorder = "rgba(255,255,255,.55)";
       this.chartData = data;
-    },
 
-    //modal runtime creation example
-    //showMsgOk(info) {
-    //  //console.log(info);
-    //  const h = this.$createElement;
-    //  // Using HTML string
-    //  const titleVNode = h("div", {
-    //    domProps: { innerHTML: "Title from <i>HTML<i> string" },
-    //    class: ["bg-dark,text-light"],
-    //  });
-    //  // More complex structure
-    //  const messageVNode = h("div", { class: ["container", "bg-dark"] }, [
-    //    h("p", { class: ["text-center", "text-primary"] }, [
-    //      " Paragraph text: ",
-    //      h("strong", {}, "Strong text"),
-    //      " and normal text ",
-    //    ]),
-    //    h("p", { class: ["text-center"] }, [
-    //      h("b-spinner", {
-    //        class: ["bg-primary"],
-    //        style: [{ color: "#FFAABB" }],
-    //      }),
-    //    ]),
-    //    h("b-img", {
-    //      props: {
-    //        src: "https://picsum.photos/id/20/250/250",
-    //        thumbnail: true,
-    //        center: true,
-    //        fluid: true,
-    //        rounded: "circle",
-    //      },
-    //    }),
-    //  ]);
-    //  const footerVNode = h("footer", {}, [
-    //    "Footer text",
-    //    h("p", {}, "this is a footer, yeeeee"),
-    //  ]);
-    //  // We must pass the generated VNodes as arrays
-    //  this.$bvModal.msgBoxOk([messageVNode, footerVNode], {
-    //    title: [titleVNode],
-    //    buttonSize: "lg",
-    //    centered: true,
-    //    size: "lg",
-    //  });
-    //},
+      /*************************/
+      if (data.length > 0) {
+        //initialize
+        this.rulTrendData.push({
+          x: labels,
+          y: data,
+          //mode: "lines+scatter",
+          type: "scatter",
+          name: "RUL trend",
+          marker: { size: 20 }
+        });
+        this.rulTrendLayout = {
+          autosize: true,
+          legend: { orientation: "h" },
+        };
+      }
+    },
     ShowTableData() {
       var tmp = [];
       if (this.dashboard_card_elements[0].type == "asset") {
@@ -727,10 +744,120 @@ export default {
     scrollHandle(evt) {
       return evt;
     },
+    ClearPlotlyChart() {
+      this.chartData = [];
+      this.chartLabels = [];
+      this.chartId = "0";
+    },
+    PlotlyMeasEventAssocChart(pred_gmt, meas_events) {
+      this.plotlyData = [];
+      this.plotlyLayout = null;
+      this.meas_event_assoc_chart_subtitle = pred_gmt;
+      let ymin = 0;
+      let ymax = 0;
+      if (meas_events.length > 0) {
+        //initialize
+        ymin = meas_events[0].meas_data_values[0];
+        ymax = meas_events[0].meas_data_values[0];
+        meas_events.forEach((meas_event) => {
+          console.log(meas_event);
+          let _local_min = Math.min(...meas_event.meas_data_values);
+          let _local_max = Math.max(...meas_event.meas_data_values);
+          ymin = _local_min < ymin ? _local_min : ymin;
+          ymax = _local_max > ymax ? _local_max : ymax;
+          let info = {
+            y: meas_event.meas_data_values,
+            mode: "lines",
+            type: "scatter",
+            name: meas_event.gmt,
+            hoverinfo: "y",
+          };
+          this.plotlyData.push(info);
+        });
+        this.plotlyData.push({
+          x: [],
+          y: [],
+          name: "Segments data",
+          xaxis: "x2",
+          type: "bar",
+        });
+      }
+      //var trace1 = {
+      //  x: [0, 1, 2, 3, 4],
+      //  y: [1, 5, 3, 7, 5],
+      //  mode: "lines+markers",
+      //  type: "scatter",
+      //  name: "Linea1",
+      //};
+      //this.plotlyData = [trace1, trace2];
+      console.log(ymin + " --- " + ymax);
+      this.plotlyLayout = {
+        autosize: true,
+        legend: { orientation: "h" },
+        xaxis: { range: [0, 1000] },
+        xaxis2: {
+          title: "Segments",
+          anchor: "y",
+          overlaying: "x",
+          side: "top",
+          range: [-0.5, 11.5],
+        },
+        shapes: [
+          // 1st highlight during Feb 4 - Feb 6
+          {
+            type: "rect",
+            // x-reference is assigned to the x-values
+            xref: "x2",
+            // y-reference is assigned to the plot paper [0,1]
+            yref: "y",
+            x0: "-0.5",
+            y0: ymin,
+            x1: "0.5",
+            y1: ymax,
+            fillcolor: "#f48484",
+            opacity: 0.6,
+            line: {
+              width: 1,
+            },
+          },
+
+          // 2nd highlight during Feb 20 - Feb 23
+
+          {
+            type: "rect",
+            xref: "x2",
+            yref: "y",
+            x0: "5.5",
+            y0: ymin,
+            x1: "6.5",
+            y1: ymax,
+            fillcolor: "#f48484",
+            opacity: 0.4,
+            line: {
+              width: 1,
+            },
+          },
+          {
+            type: "rect",
+            xref: "x2",
+            yref: "y",
+            x0: "0.5",
+            y0: ymin,
+            x1: "1.5",
+            y1: ymax,
+            fillcolor: "#f48484",
+            opacity: 0.2,
+            line: {
+              width: 1,
+            },
+          },
+        ],
+      };
+    },
   },
   created() {
     this.loading = false;
-
+    console.log(process.env.NODE_ENV);
     this.GetEnterprises();
   },
   computed: {

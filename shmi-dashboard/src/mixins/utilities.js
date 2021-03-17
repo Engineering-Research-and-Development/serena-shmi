@@ -7,7 +7,7 @@ const utilities = {
       return new Promise((resolve, reject) => {
         this.$http
           .get(
-            url /*{
+            url /*,{
             headers: {
               BrowserEnterprise: 300,
               BrowserSite: "0000012C0000012D",
@@ -31,6 +31,14 @@ const utilities = {
     },
     containsKey(obj, key) {
       return Object.keys(obj).includes(key);
+    },
+    sortByProperty(property) {
+      return function(a, b) {
+        if (a[property] > b[property]) return 1;
+        else if (a[property] < b[property]) return -1;
+
+        return 0;
+      };
     },
   },
 };
