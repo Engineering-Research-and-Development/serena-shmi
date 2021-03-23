@@ -10,7 +10,11 @@
     <div class="card-body p-0">
       <b-card-text>{{ card_body_text }}</b-card-text>
       <template
-        v-if="this.prediction_enabled && this.card_type == this.prediction_type"
+        v-if="
+          this.prediction_enabled &&
+            this.card_type == this.prediction_type &&
+            this.prediction.rul != -1
+        "
       >
         <h4>{{ this.pred_title }}</h4>
         <div
@@ -36,7 +40,7 @@
         <div class="float-right">
           <b-button
             pill
-            v-if="prediction_enabled"
+            v-if="this.prediction_enabled && this.arrayPredictions.length >= 10"
             variant="outline-dark"
             v-on:click="InfoBtnClicked"
             >{{ card_button_text }}</b-button
@@ -168,6 +172,7 @@ export default {
       this.$emit("cardClicked", response);
     },
     InfoBtnClicked() {
+      this.arrayPredictions.sort(this.sortByProperty("ts"));
       var response = {
         id: this.card_id,
         title: this.pred_title,
@@ -176,8 +181,68 @@ export default {
       };
       this.$emit("infoClicked", response);
     },
+    GetLatest100RulEvents() {
+      this.fetchData(
+        this.$config.localMetadataApiUrl +
+          "/meas_location/" +
+          this.site_id +
+          "/" +
+          this.rul_id +
+          "?meas_event_latest=100"
+      )
+        .then((result) => {
+          let local_meas_events = this.Pick_10MeasEvents(result.meas_events);
+          local_meas_events.forEach((element) => {
+            let url =
+              this.SerenaResourceAddressFromURL(element["@id"]).split("/")[0] +
+              "/" +
+              this.SerenaResourceAddressFromURL(element["@id"]).split("/")[1] +
+              "/" +
+              "?meas_event_date=" +
+              this.SerenaResourceAddressFromURL(element["@id"]).split("/")[2];
+            this.fetchData("https://shmi.serenademo.eu/nifi/meas_event/" + url)
+              .then((result) => {
+                if (result.meas_events.length > 0) {
+                  let rul_event = result.meas_events[0];
+                  //let rul_event_obj = {
+                  //  id: rul_event["@id"],
+                  //  ts: rul_event.gmt_event,
+                  //  RUL: this.containsKey(rul_event, "data_value")
+                  //    ? rul_event.data_value
+                  //    : "unavailable",
+                  //  RUL_unit: rul_event.eng_unit_type.name
+                  //    ? rul_event.eng_unit_type.name
+                  //    : "",
+                  //};
+                  if (rul_event.hasOwnProperty("data_value")) {
+                    let rul_event_obj = {
+                      id: rul_event["@id"],
+                      ts: rul_event.gmt_event,
+                      RUL: rul_event.data_value,
+                      RUL_unit: rul_event.eng_unit_type.name
+                        ? rul_event.eng_unit_type.name
+                        : "",
+                    };
+                    this.arrayPredictions.push({
+                      id: rul_event_obj.id,
+                      ts: rul_event_obj.ts,
+                      rul: rul_event_obj.RUL,
+                      rul_unit: rul_event_obj.RUL_unit,
+                    });
+                  }
+                }
+              })
+              .catch((e) => {
+                this.makeToast("danger", "Error", e.message);
+              });
+          });
+        })
+        .catch((e) => {
+          this.makeToast("danger", "Error", e.message);
+        });
+    },
     InitRulStatus(n) {
-      console.log(this.card_id + " ---->  InitRulStatus(" + n + ")");
+      //console.log(this.card_id + " ---->  InitRulStatus(" + n + ")");
       //console.log(
       //  this.$config.localMetadataApiUrl +
       //    "/meas_location/" +
@@ -200,18 +265,19 @@ export default {
       )
         .then((result) => {
           if (result.error == null) {
-            console.log(result);
+            //console.log(result);
             if (
               result.asset["@id"] == this.card_id &&
-              result.meas_events != null
+              result.meas_events != null &&
+              result.meas_events.length > 0
             ) {
               this.prediction_enabled = true;
-
               /************************/
-              this.TEST(
-                result.meas_events[0]["@id"],
-                result.meas_events[0].meas_event_assoc
-              );
+              if (n == 1)
+                this.GetMeasEventAssoc(
+                  result.meas_events[0]["@id"],
+                  result.meas_events[0].meas_event_assoc
+                );
               /************************/
               if (this.has_label) {
                 this.InitLabelStatus(n, result.meas_events);
@@ -233,8 +299,15 @@ export default {
                       ? rul_event.eng_unit_type.name
                       : "",
                   };
-                  if (prediction.RUL != "unavailable")
-                    this.UpdateRul(prediction);
+                  if (prediction.RUL != "unavailable") {
+                    if (n == 1) this.UpdateRul(prediction);
+                    this.arrayPredictions.push({
+                      id: prediction.id,
+                      ts: prediction.ts,
+                      rul: prediction.RUL,
+                      rul_unit: prediction.RUL_unit,
+                    });
+                  }
                 });
               }
             }
@@ -281,8 +354,15 @@ export default {
                       ? rul_event.eng_unit_type.name
                       : "",
                   };
-                  if (prediction.RUL != "unavailable")
-                    this.UpdateRul(prediction);
+                  if (prediction.RUL != "unavailable") {
+                    if (n == 1) this.UpdateRul(prediction);
+                    this.arrayPredictions.push({
+                      id: prediction.id,
+                      ts: prediction.ts,
+                      rul: prediction.RUL,
+                      rul_unit: prediction.RUL_unit,
+                    });
+                  }
                 }
               });
             }
@@ -293,7 +373,6 @@ export default {
         .catch((e) => {
           this.makeToast("danger", "Error", e.message);
         });
-      return null;
     },
     GetRulAndLabelID() {
       let label_local_id, rul_local_id;
@@ -397,7 +476,9 @@ export default {
                 this.has_label = false;
               }
               if (this.prediction_enabled) {
-                this.InitRulStatus(10);
+                //this.InitRulStatus(10);
+                this.InitRulStatus(1);
+                this.GetLatest100RulEvents();
                 this.interval = setInterval(() => {
                   if (
                     this.card_type == this.prediction_type &&
@@ -439,14 +520,11 @@ export default {
         local_prediction.label_unit = pred.p_label_unit;
         local_prediction.rul = pred.RUL;
         local_prediction.rul_unit = pred.RUL_unit;
-        this.arrayPredictions.push(local_prediction);
-        this.arrayPredictions.sort(this.sortByProperty("ts"));
-        this.prediction = this.arrayPredictions.slice(-1)[0];
+        this.prediction = local_prediction;
       }
     },
     ColorLabel(label) {
       if (this.site_id == "0000012C0000012D") {
-        console.log(label);
         if (label <= 25) {
           return this.colors.good;
         } else if (label > 25 && label <= 50) {
@@ -487,7 +565,7 @@ export default {
         this.prediction_enabled = false;
       }
     },
-    TEST: function(meas_event_id, array_meas_event_assoc) {
+    GetMeasEventAssoc: function(meas_event_id, array_meas_event_assoc) {
       this.arrayMeasEventAssoc = [];
       array_meas_event_assoc.forEach((e, i) => {
         if (
@@ -506,7 +584,6 @@ export default {
             "https://shmi.serenademo.eu/nifi/meas_event/" + assoc_url
           )
             .then((result) => {
-              console.log(result);
               if (result.error == null) {
                 let local_meas_object = {
                   gmt: result[0].gmt_stored,
@@ -516,7 +593,6 @@ export default {
                   meas_location_eng_unit: result[0].eng_unit_type.name,
                   meas_data_values: result[0].data_value,
                 };
-                console.log(local_meas_object);
                 this.arrayMeasEventAssoc.push(local_meas_object);
               }
             })
@@ -525,6 +601,15 @@ export default {
             });
         }
       });
+    },
+    Pick_10MeasEvents(measEvents) {
+      let arrayMeas = [];
+      let step = Math.floor(measEvents.length / 10);
+      for (let i = 0; i <= 10; i++) {
+        if (i < 10) arrayMeas.push(measEvents[i * step]);
+        else arrayMeas.push(measEvents[measEvents.length - 1]);
+      }
+      return arrayMeas;
     },
   },
 

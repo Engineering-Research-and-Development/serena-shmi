@@ -298,8 +298,8 @@ export default {
       meas_event_assoc_chart_subtitle: "",
       rul_trend_chart_title: "RUL trend",
       rul_trend_chart_subtitle: "",
-      rulTrendData:[],
-      rulTrendLayout:null,
+      rulTrendData: [],
+      rulTrendLayout: null,
     };
   },
   methods: {
@@ -554,43 +554,59 @@ export default {
       this.ClearPlotlyChart();
     },
     ShowChart(response) {
+      let ymin = 0;
+      let ymax = 0;
       this.rulTrendData = [];
       this.rulTrendLayout = null;
-      console.log(response);
-      let labels = [];
-      let data = [];
-      let latest_gmt = "";
-      for (var i = 0; i < response.predictions.length; i++) {
-        labels.push(response.predictions[i].ts);
-        data.push(response.predictions[i].rul);
-        if (i == response.predictions.length - 1)
-          latest_gmt = response.predictions[i].ts;
-      }
-      this.PlotlyMeasEventAssocChart(latest_gmt, response.meas_events_assoc);
-      this.chartLabel = "RUL";
-      this.chartId = response.id;
-      this.chartTitle = response.title;
-      this.rul_trend_chart_subtitle = "ASDF";
-      this.chartLabels = labels;
-      this.chartBG = "#20a8d8";
-      this.chartBorder = "rgba(255,255,255,.55)";
-      this.chartData = data;
+      if (response.predictions.length > 0) {
+        ymin = response.predictions[0].rul;
+        ymax = response.predictions[0].rul;
+        let labels = [];
+        let data = [];
+        let latest_gmt = "";
+        for (var i = 0; i < response.predictions.length; i++) {
+          labels.push(response.predictions[i].ts);
+          data.push(response.predictions[i].rul);
+          ymin =
+            response.predictions[i].rul < ymin
+              ? response.predictions[i].rul
+              : ymin;
+          ymax =
+            response.predictions[i].rul > ymax
+              ? response.predictions[i].rul
+              : ymax;
+          if (i == response.predictions.length - 1)
+            latest_gmt = response.predictions[i].ts;
+        }
+        this.PlotlyMeasEventAssocChart(latest_gmt, response.meas_events_assoc);
+        this.chartLabel = "RUL";
+        this.chartId = response.id;
+        this.chartTitle = response.title;
+        this.rul_trend_chart_subtitle = response.predictions[0].ts+" - "+response.predictions[response.predictions.length - 1].ts;
+        this.chartLabels = labels;
+        this.chartBG = "#20a8d8";
+        this.chartBorder = "rgba(255,255,255,.55)";
+        this.chartData = data;
 
-      /*************************/
-      if (data.length > 0) {
-        //initialize
-        this.rulTrendData.push({
-          x: labels,
-          y: data,
-          //mode: "lines+scatter",
-          type: "scatter",
-          name: "RUL trend",
-          marker: { size: 20 }
-        });
-        this.rulTrendLayout = {
-          autosize: true,
-          legend: { orientation: "h" },
-        };
+        /*************************/
+        if (data.length > 0) {
+          //initialize
+          this.rulTrendData.push({
+            x: labels,
+            y: data,
+            //mode: "lines+scatter",
+            type: "scatter",
+            name: "RUL trend",
+            marker: { size: 20 },
+          });
+          this.rulTrendLayout = {
+            autosize: true,
+            legend: { orientation: "h" },
+            yaxis: {
+              range: [Math.floor(ymin * 0.65), Math.ceil(ymax + ymax * 0.2)],
+            },
+          };
+        }
       }
     },
     ShowTableData() {
@@ -750,6 +766,7 @@ export default {
       this.chartId = "0";
     },
     PlotlyMeasEventAssocChart(pred_gmt, meas_events) {
+      console.log(pred_gmt);
       this.plotlyData = [];
       this.plotlyLayout = null;
       this.meas_event_assoc_chart_subtitle = pred_gmt;
@@ -760,7 +777,7 @@ export default {
         ymin = meas_events[0].meas_data_values[0];
         ymax = meas_events[0].meas_data_values[0];
         meas_events.forEach((meas_event) => {
-          console.log(meas_event);
+          //console.log(meas_event);
           let _local_min = Math.min(...meas_event.meas_data_values);
           let _local_max = Math.max(...meas_event.meas_data_values);
           ymin = _local_min < ymin ? _local_min : ymin;
@@ -790,7 +807,7 @@ export default {
       //  name: "Linea1",
       //};
       //this.plotlyData = [trace1, trace2];
-      console.log(ymin + " --- " + ymax);
+      //console.log(ymin + " --- " + ymax);
       this.plotlyLayout = {
         autosize: true,
         legend: { orientation: "h" },
